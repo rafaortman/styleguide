@@ -1043,12 +1043,14 @@
             var r = parseFloat(get('--radius'));
             var f = parseFloat(get('--fs-base'));
             var round = function (n) { return Math.round(n * 100) / 100; };
+            var pal = palettes[currentTheme];
             var css =
 ':root {\n' +
 '    /* cores */\n' +
-'    --bg: ' + get('--bg') + '; --surface: ' + get('--surface') + '; --text: ' + get('--text') + '; --text-muted: ' + get('--text-muted') + ';\n' +
-'    --border: ' + get('--border') + '; --accent: ' + get('--accent') + '; --info: ' + get('--info') + ';\n' +
-'    --ok: ' + get('--ok') + '; --wip: ' + get('--wip') + '; --danger: ' + get('--danger') + ';\n' +
+'    --bg: ' + pal['--bg'] + '; --surface: ' + pal['--surface'] + '; --surface-2: ' + pal['--surface-2'] + ';\n' +
+'    --text: ' + pal['--text'] + '; --text-muted: ' + pal['--text-muted'] + ';\n' +
+'    --border: ' + pal['--border'] + '; --border-strong: ' + pal['--border-strong'] + '; --text-onaccent: ' + pal['--text-onaccent'] + ';\n' +
+'    --accent: ' + pal['--accent'] + '; --info: ' + pal['--info'] + '; --ok: ' + pal['--ok'] + '; --wip: ' + pal['--wip'] + '; --danger: ' + pal['--danger'] + '; --todo: ' + pal['--todo'] + ';\n' +
 '    /* espaçamento */\n' +
 '    --space-1: ' + (u * 1) + 'px; --space-2: ' + (u * 2) + 'px; --space-3: ' + (u * 3) + 'px; --space-4: ' + (u * 4) + 'px;\n' +
 '    --space-5: ' + (u * 6) + 'px; --space-6: ' + (u * 8) + 'px; --space-7: ' + (u * 12) + 'px;\n' +
@@ -1073,6 +1075,8 @@
                     imports += "@import url('https://fonts.googleapis.com/css2?family=" + r.family.replace(/\s+/g, '+') + ":wght@400;600;700&display=swap');\n";
                 }
             });
+            var systemCss = document.querySelector('style').textContent.trim();
+            css = css + '\n\n' + systemCss;
             if (imports) css = imports + '\n' + css;
             document.getElementById('sgOut').value = css;
             if (navigator.clipboard) navigator.clipboard.writeText(css).catch(function () {});
