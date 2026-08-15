@@ -1,0 +1,1096 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Style guide</title>
+
+    <!-- ============================================================
+         TOKENS: as "variáveis de topo" que governam todo o resto.
+         Depois, controles interativos vão editar estes valores e
+         exportar o CSS. Todo componente abaixo referencia estes tokens
+         (nada de valor hardcoded no specimen) — essa é a "relação".
+    ============================================================ -->
+    <style>
+        @layer reset, tokens, base, components, utilities;
+
+        @layer tokens {
+            :root {
+                /* ============ PRIMITIVAS — editadas pelos controles ============ */
+                --bg: #f4f5f7; --surface: #ffffff; --text: #1c1e21; --text-muted: #6a7078;
+                --border: #dfe2e7; --accent: #3b5bdb; --info: #1971c2;
+                --ok: #2f9e44; --wip: #f08c00; --danger: #c0392b;
+
+                --space-unit: 4px;   /* governa toda a escala de espaço */
+                --radius: 4px;       /* governa os raios */
+                --fs-base: 15px;     /* governa a escala tipográfica */
+                --lh: 1.5;
+                --font-titulo: "Noto Sans", system-ui, sans-serif;
+                --font-corpo: "Noto Sans", system-ui, sans-serif;
+                --font-btn: "Noto Sans", system-ui, sans-serif;
+
+                /* ============ SECUNDÁRIAS — estáticas por ora ============ */
+                --surface-2: #eef0f3; --border-strong: #c4c9d0; --text-onaccent: #ffffff; --todo: #adb5bd;
+                --font-mono: "Noto Sans Mono", ui-monospace, monospace;
+                --lh-tight: 1.2; --fw: 400; --fw-medium: 600; --fw-bold: 700;
+                --ring: 2px; --control-h: 2em;
+                --btn-radius: 4px; --btn-height: 2em; --btn-pad-x: .75em; --btn-transform: uppercase; --btn-tracking: .075em; --btn-weight: 400;
+                --shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.08);
+                --shadow-2: 0 8px 24px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
+
+                /* ============ DERIVADAS — calculadas das primitivas ============ */
+                --space-1: calc(var(--space-unit) * 1); --space-2: calc(var(--space-unit) * 2);
+                --space-3: calc(var(--space-unit) * 3); --space-4: calc(var(--space-unit) * 4);
+                --space-5: calc(var(--space-unit) * 6); --space-6: calc(var(--space-unit) * 8);
+                --space-7: calc(var(--space-unit) * 12);
+                --radius-lg: calc(var(--radius) * 3); --radius-pill: 999px;
+                --fs-xxs: calc(var(--fs-base) * .747); --fs-xs: calc(var(--fs-base) * .8);
+                --fs-sm: calc(var(--fs-base) * .867); --fs-lg: calc(var(--fs-base) * 1.2);
+                --fs-xl: calc(var(--fs-base) * 1.6); --fs-2xl: calc(var(--fs-base) * 2.133);
+            }
+        }
+
+        @layer reset {
+            *, *::before, *::after { box-sizing: border-box; }
+            * { margin: 0; }
+            img, svg { display: block; max-width: 100%; }
+            input, textarea, button, select { font: inherit; color: inherit; }
+            button { padding: 0; border: 0; background: none; line-height: inherit; text-align: inherit; cursor: pointer; appearance: none; -webkit-appearance: none; -webkit-tap-highlight-color: transparent; touch-action: manipulation; user-select: none; }
+            ul[class], ol[class] { list-style: none; padding: 0; }
+        }
+
+        @layer base {
+            body { font-family: var(--font-corpo); font-size: var(--fs-base); line-height: var(--lh); font-weight: var(--fw); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+            h1, h2, h3, h4 { font-family: var(--font-titulo); line-height: var(--lh-tight); font-weight: var(--fw-medium); }
+            h1 { font-size: var(--fs-2xl); }
+            h2 { font-size: var(--fs-xl); }
+            h3 { font-size: var(--fs-lg); }
+            h4 { font-size: var(--fs-base); }
+            a { color: var(--accent); text-decoration: none; }
+            a:hover { text-decoration: underline; }
+            p { max-width: 68ch; }
+            small { font-size: var(--fs-sm); }
+            strong { font-weight: var(--fw-bold); }
+            hr { height: 1px; border: 0; background: var(--border); margin: var(--space-4) 0; }
+            blockquote { border-left: 3px solid var(--accent); padding: var(--space-1) var(--space-4); color: var(--text-muted); font-style: italic; }
+            kbd { font-family: var(--font-mono); font-size: .85em; background: var(--surface); border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: var(--radius); padding: 1px 6px; }
+            pre { font-family: var(--font-mono); font-size: var(--fs-sm); background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-3); overflow: auto; }
+            input, textarea, select { padding: var(--space-2) var(--space-3); border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+            input:focus-visible, textarea:focus-visible, select:focus-visible, button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: var(--ring) solid var(--accent); outline-offset: 1px; }
+            textarea { width: 100%; resize: vertical; }
+            :where(button, input, select, textarea):disabled { opacity: .4; cursor: default; }
+            select { padding-right: var(--space-5); background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 50'><path fill='%236a7078' d='M25 29L18.5 22.5 20 21l5 5 5-5 1.5 1.5z'/></svg>"); background-repeat: no-repeat; background-position: right var(--space-1) center; background-size: 1.4em; }
+            accent-color: var(--accent);
+            input[type=checkbox], input[type=radio], input[type=range], progress { accent-color: var(--accent); }
+        }
+
+        @layer components {
+            /* ---------- botões ---------- */
+            .btn { font-family: var(--font-btn); font-size: 1rem; letter-spacing: var(--btn-tracking); height: var(--btn-height); font-weight: var(--btn-weight); display: inline-flex; align-items: center; justify-content: center; text-transform: var(--btn-transform); border-radius: var(--btn-radius); transition: opacity .3s; }
+            .btn > svg { width: 2em; height: 2em; fill: currentColor; }
+            .btn > span { padding: 0 var(--btn-pad-x); }
+            .btn > svg + span { padding-left: 0; }
+            .btn > span:has(+ svg) { padding-right: 0; }
+            .btn:not(:disabled):hover { opacity: .8; }
+            .btn--ghost        { background: var(--surface); box-shadow: inset 0 0 0 1px currentColor; color: var(--text-muted); }
+            .btn--primary      { background: var(--accent); color: var(--text-onaccent); }
+            .btn--danger       { background: transparent; box-shadow: inset 0 0 0 1px var(--danger); color: var(--danger); }
+            .btn--danger-solid { background: var(--danger); color: #fff; }
+            .btn--link         { height: auto; color: var(--accent); text-decoration: underline; }
+            .btn--sm { font-size: .85rem; }
+            .btn--sign          { background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--text-muted); }
+            .btn--sign.is-ready { box-shadow: inset 0 0 0 1px var(--ok); color: var(--ok); }
+            .btn--sign.is-done  { background: var(--ok); color: #fff; }
+            .state-btn--todo, .stage-state--todo { background: var(--todo); color: #fff; }
+            .state-btn--wip,  .stage-state--wip  { background: var(--wip);  color: #fff; }
+            .state-btn--done, .stage-state--done { background: var(--ok);   color: #fff; }
+
+            .count { color: var(--text-muted); font-size: var(--fs-sm); }
+
+            /* ---------- badges / chips / tags ---------- */
+            .badge { display: inline-block; padding: 2px .6em; border-radius: var(--radius-pill); background: var(--surface-2); color: var(--text-muted); font-size: var(--fs-xxs); font-weight: var(--fw-medium); white-space: nowrap; }
+            .badge--info   { background: color-mix(in srgb, var(--info) 15%, var(--surface)); color: var(--info); }
+            .badge--ok     { background: color-mix(in srgb, var(--ok) 15%, var(--surface)); color: var(--ok); }
+            .badge--wip    { background: color-mix(in srgb, var(--wip) 18%, var(--surface)); color: color-mix(in srgb, var(--wip) 70%, #000); }
+            .badge--danger { background: color-mix(in srgb, var(--danger) 12%, var(--surface)); color: var(--danger); }
+
+            .chip { display: inline-flex; align-items: center; gap: var(--space-1); padding: var(--space-1) var(--space-2); background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-pill); font-size: var(--fs-sm); }
+            .chip__x { display: inline-flex; width: 1.25em; height: 1.25em; border-radius: 50%; color: var(--text-muted); }
+            .chip__x svg { width: 100%; height: 100%; fill: currentColor; }
+            .chip__x:hover { background: var(--border); color: var(--text); }
+
+            /* ---------- status dot ---------- */
+            .dot { display: inline-block; width: .7em; height: .7em; border-radius: 50%; background: var(--todo); vertical-align: middle; }
+            .dot--ok { background: var(--ok); } .dot--wip { background: var(--wip); } .dot--danger { background: var(--danger); } .dot--info { background: var(--info); }
+
+            /* ---------- avatar ---------- */
+            .avatar { display: inline-flex; align-items: center; justify-content: center; width: 2.5em; height: 2.5em; border-radius: 50%; background: var(--accent); color: #fff; font-size: var(--fs-sm); font-weight: var(--fw-medium); overflow: hidden; }
+            .avatar img { width: 100%; height: 100%; object-fit: cover; }
+            .avatar-group { display: flex; }
+            .avatar-group .avatar { border: 2px solid var(--surface); margin-left: -.6em; }
+            .avatar-group .avatar:first-child { margin-left: 0; }
+
+            /* ---------- alert / callout ---------- */
+            .alert { display: flex; gap: var(--space-3); padding: var(--space-3) var(--space-4); border: 1px solid var(--border); border-left-width: 3px; border-radius: var(--radius); background: var(--surface); }
+            .alert__title { font-weight: var(--fw-medium); }
+            .alert__body { color: var(--text-muted); font-size: var(--fs-sm); }
+            .alert--info   { border-left-color: var(--info);   background: color-mix(in srgb, var(--info) 6%, var(--surface)); }
+            .alert--ok     { border-left-color: var(--ok);     background: color-mix(in srgb, var(--ok) 6%, var(--surface)); }
+            .alert--wip    { border-left-color: var(--wip);    background: color-mix(in srgb, var(--wip) 8%, var(--surface)); }
+            .alert--danger { border-left-color: var(--danger); background: color-mix(in srgb, var(--danger) 6%, var(--surface)); }
+
+            /* ---------- context-box ---------- */
+            .context-box { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--space-3) var(--space-5); padding: var(--space-4); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+            .context-box--welcome { border-color: var(--accent); }
+            .context-box__text { flex: 1; min-width: 15rem; }
+            .context-box__text b { font-size: var(--fs-lg); }
+            .context-box__text p { margin-top: var(--space-1); max-width: 62ch; color: var(--text-muted); font-size: var(--fs-sm); }
+            .context-box__actions { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+
+            /* ---------- cards ---------- */
+            .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: var(--space-4); padding: 0; list-style: none; }
+            .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: box-shadow .15s, border-color .15s; }
+            .card:hover { border-color: var(--text-muted); box-shadow: var(--shadow-1); }
+            .card__link { display: flex; flex-direction: column; height: 100%; color: inherit; }
+            .card__link:hover { text-decoration: none; }
+            .card__cover { display: block; aspect-ratio: 16 / 10; background: var(--surface-2); }
+            .card__cover img { width: 100%; height: 100%; object-fit: cover; }
+            .card__body { display: flex; flex: 1; flex-direction: column; gap: var(--space-3); padding: var(--space-3) var(--space-4) var(--space-4); }
+            .card__top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-2); }
+            .card__title { font-size: var(--fs-base); }
+            .card__sub { color: var(--text-muted); font-size: var(--fs-sm); }
+            .card__meta { display: flex; gap: var(--space-4); margin-top: auto; color: var(--text-muted); font-size: var(--fs-sm); }
+            .card__meta b { color: var(--text); }
+            .card--new { background: transparent; border-style: dashed; }
+            .card__new { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--space-2); width: 100%; height: 100%; min-height: 150px; color: var(--text-muted); fill: currentColor; font-weight: var(--fw-medium); }
+            .card__new:hover { color: var(--accent); }
+            .card__new svg { width: 1.75em; height: 1.75em; }
+
+            /* ---------- form field ---------- */
+            .field { display: flex; flex-direction: column; gap: var(--space-1); margin-bottom: var(--space-4); }
+            .field > label { color: var(--text-muted); font-size: var(--fs-sm); font-weight: var(--fw-medium); }
+            .field__hint { color: var(--text-muted); font-size: var(--fs-xs); }
+            .field__error { color: var(--danger); font-size: var(--fs-xs); }
+            .field--error input, .field--error textarea, .field--error select { border-color: var(--danger); }
+            .field--error input:focus-visible { outline-color: var(--danger); }
+            .note-field { min-height: 4.5em; }
+            .choice { display: flex; align-items: center; gap: var(--space-2); font-size: var(--fs-sm); cursor: pointer; }
+            .choice input { margin: 0; width: 1.1em; height: 1.1em; }
+
+            /* switch */
+            .switch { position: relative; display: inline-flex; align-items: center; gap: var(--space-2); cursor: pointer; font-size: var(--fs-sm); }
+            .switch input { position: absolute; opacity: 0; width: 0; height: 0; }
+            .switch__track { width: 2.4em; height: 1.3em; border-radius: var(--radius-pill); background: var(--border-strong); transition: background .2s; position: relative; flex: none; }
+            .switch__track::after { content: ""; position: absolute; top: 2px; left: 2px; width: calc(1.3em - 4px); height: calc(1.3em - 4px); border-radius: 50%; background: #fff; transition: transform .2s; }
+            .switch input:checked + .switch__track { background: var(--accent); }
+            .switch input:checked + .switch__track::after { transform: translateX(1.1em); }
+            .switch input:focus-visible + .switch__track { outline: var(--ring) solid var(--accent); outline-offset: 2px; }
+
+            /* ---------- table ---------- */
+            .table { width: 100%; border-collapse: collapse; font-size: var(--fs-sm); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+            .table th, .table td { padding: var(--space-2) var(--space-3); text-align: left; border-bottom: 1px solid var(--border); }
+            .table thead th { background: var(--surface-2); color: var(--text-muted); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .04em; font-weight: var(--fw-medium); }
+            .table tbody tr:last-child td { border-bottom: 0; }
+            .table tbody tr:hover { background: color-mix(in srgb, var(--accent) 4%, var(--surface)); }
+            .table td.num { font-family: var(--font-mono); text-align: right; }
+
+            /* ---------- accordion ---------- */
+            .section { margin-bottom: var(--space-4); overflow: hidden; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); }
+            .section__heading .btn { width: 100%; height: auto; justify-content: flex-start; gap: var(--space-2); padding: var(--space-3) var(--space-4); font-size: var(--fs-base); text-transform: none; }
+            .section__body { display: flex; flex-direction: column; gap: var(--space-3); padding: var(--space-4); border-top: 1px solid var(--border); }
+            .section.is-collapsed .section__body { display: none; }
+            .ic.rot-right { transform: rotate(-90deg); }
+
+            /* ---------- tree-item (item expansível com sublista) ---------- */
+            .tree { display: flex; flex-direction: column; gap: var(--space-3); padding: 0; list-style: none; }
+            .tree-item { padding: var(--space-2); border: 1px solid var(--border); border-radius: var(--radius); }
+            .tree-item__top { display: flex; align-items: center; }
+            .tree-item__name { flex: 1; min-width: 0; }
+            .tree-item.is-collapsed .tree-item__children { display: none; }
+            .tree-item__children { display: flex; flex-direction: column; gap: var(--space-1); margin-top: var(--space-2); padding: 0 0 0 2rem; list-style: none; }
+            .sub-row { display: flex; align-items: center; gap: var(--space-2); }
+            .sub-row__input { flex: 1; min-width: 0; }
+
+            /* ---------- row-actions ---------- */
+            .row-actions { display: flex; flex: none; gap: var(--space-1); }
+
+            /* ---------- list-row (linha genérica com conteúdo + ações) ---------- */
+            .list { display: flex; flex-direction: column; gap: var(--space-2); padding: 0; list-style: none; }
+            .list-row { display: flex; align-items: center; gap: var(--space-2); padding-right: var(--space-2); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+            .list-row:hover { border-color: var(--text-muted); }
+            .list-row__link { display: flex; flex: 1; align-items: center; gap: var(--space-3); min-width: 0; padding: var(--space-2) var(--space-3); color: inherit; }
+            .list-row__link:hover { text-decoration: none; }
+            .list-row__num { flex: none; width: 1.5em; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--fs-sm); text-align: center; }
+            .list-row__main { display: flex; flex-direction: column; min-width: 0; }
+            .list-row__title { font-weight: var(--fw-medium); }
+            .list-row__sub, .list-row__status { color: var(--text-muted); font-size: var(--fs-sm); }
+
+            /* ---------- tabs ---------- */
+            .tabs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--border); }
+            .tab { padding: var(--space-2) var(--space-3); color: var(--text-muted); border-bottom: 2px solid transparent; margin-bottom: -1px; font-size: var(--fs-sm); }
+            .tab:hover { color: var(--text); }
+            .tab.is-active { color: var(--accent); border-bottom-color: var(--accent); font-weight: var(--fw-medium); }
+
+            /* ---------- breadcrumb ---------- */
+            .breadcrumb { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); font-size: var(--fs-sm); color: var(--text-muted); list-style: none; padding: 0; }
+            .breadcrumb li { display: flex; align-items: center; gap: var(--space-2); }
+            .breadcrumb li:not(:last-child)::after { content: "/"; color: var(--border-strong); }
+            .breadcrumb li[aria-current] { color: var(--text); }
+
+            /* ---------- pagination ---------- */
+            .pagination { display: flex; gap: var(--space-1); list-style: none; padding: 0; }
+            .pagination a { display: inline-flex; align-items: center; justify-content: center; min-width: 2em; height: 2em; padding: 0 var(--space-2); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); font-size: var(--fs-sm); }
+            .pagination a:hover { border-color: var(--text-muted); text-decoration: none; }
+            .pagination a[aria-current] { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+            /* ---------- progress / meter ---------- */
+            .progress { height: 8px; background: var(--surface-2); border-radius: var(--radius-pill); overflow: hidden; }
+            .progress__bar { height: 100%; background: var(--accent); border-radius: inherit; }
+
+            /* ---------- spinner / skeleton ---------- */
+            .spinner { width: 1.5em; height: 1.5em; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
+            @keyframes spin { to { transform: rotate(360deg); } }
+            .skeleton { background: linear-gradient(90deg, var(--surface-2) 25%, var(--border) 37%, var(--surface-2) 63%); background-size: 400% 100%; border-radius: var(--radius); animation: shimmer 1.4s ease infinite; }
+            @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: -100% 0; } }
+
+            /* ---------- tooltip ---------- */
+            .tip { position: relative; }
+            .tip::after { content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%); white-space: nowrap; background: var(--text); color: var(--bg); font-size: var(--fs-xs); padding: var(--space-1) var(--space-2); border-radius: var(--radius); opacity: 0; pointer-events: none; transition: opacity .15s; }
+            .tip:hover::after { opacity: 1; }
+
+            /* ---------- dialog / modal ---------- */
+            .dialog { max-width: 400px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow-2); overflow: hidden; }
+            .dialog__head { display: flex; align-items: center; justify-content: space-between; gap: var(--space-3); padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--border); }
+            .dialog__title { font-size: var(--fs-lg); }
+            .dialog__body { padding: var(--space-4); color: var(--text-muted); font-size: var(--fs-sm); }
+            .dialog__foot { display: flex; justify-content: flex-end; gap: var(--space-2); padding: var(--space-3) var(--space-4); border-top: 1px solid var(--border); }
+
+            /* ---------- toast ---------- */
+            .toast { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-3) var(--space-4); background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--radius); box-shadow: var(--shadow-1); max-width: 360px; }
+            .toast--ok { border-left-color: var(--ok); }
+            .toast--danger { border-left-color: var(--danger); }
+            .toast__body { flex: 1; font-size: var(--fs-sm); }
+
+            /* ---------- empty state ---------- */
+            .empty { display: flex; flex-direction: column; align-items: center; gap: var(--space-2); padding: var(--space-6); text-align: center; color: var(--text-muted); border: 1px dashed var(--border-strong); border-radius: var(--radius-lg); }
+            .empty svg { width: 2.5em; height: 2.5em; fill: var(--border-strong); }
+
+            /* ---------- texto corrido (prose) ---------- */
+            .prose { max-width: 68ch; }
+            .prose > * + * { margin-top: var(--space-3); }
+            .prose > h2 { font-size: var(--fs-xl); margin-top: var(--space-5); }
+            .prose > h3 { font-size: var(--fs-lg); margin-top: var(--space-5); }
+            .prose > h4 { margin-top: var(--space-4); }
+            .prose ul { list-style: disc; padding-left: 1.4em; }
+            .prose ol { list-style: decimal; padding-left: 1.4em; }
+            .prose ul ul, .prose ol ol { margin-top: var(--space-1); }
+            .prose li + li { margin-top: var(--space-1); }
+
+            .faint { color: var(--text-muted); }
+        }
+    </style>
+
+    <style>
+        /* ============ SÓ DO STYLE GUIDE — layout da página ============ */
+        body { padding: var(--space-5); max-width: 1080px; margin-inline: auto; }
+        .lead { color: var(--text-muted); font-size: var(--fs-sm); line-height: 1.6; margin: var(--space-2) 0 var(--space-6); }
+        code { font-family: var(--font-mono); background: #0000000d; padding: 0 4px; border-radius: 4px; font-size: .9em; }
+        body > h2 { font-size: var(--fs-xl); margin: var(--space-7) 0 var(--space-3); padding-bottom: var(--space-2); border-bottom: 2px solid var(--border); scroll-margin-top: var(--space-4); }
+        body > h3 { font-size: var(--fs-lg); margin: var(--space-5) 0 var(--space-2); color: var(--text-muted); }
+        body > h2 a.anchor { color: var(--border-strong); font-size: var(--fs-sm); text-decoration: none; margin-left: var(--space-2); opacity: 0; }
+        body > h2:hover a.anchor { opacity: 1; }
+
+        /* índice */
+        .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: var(--space-4) var(--space-5); margin-bottom: var(--space-6); }
+        .toc h2 { font-size: var(--fs-base); color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: var(--space-3); border: 0; padding: 0; }
+        .toc ul { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-1) var(--space-4); }
+        .toc a { font-size: var(--fs-sm); }
+
+        /* tokens: cores */
+        .swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: var(--space-3); }
+        .swatch { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+        .swatch__chip { height: 56px; }
+        .swatch__meta { padding: var(--space-2); background: var(--surface); font-size: var(--fs-xs); }
+        .swatch__meta b { display: block; }
+        .swatch__meta span { color: var(--text-muted); font-family: var(--font-mono); }
+
+        /* tokens: escalas */
+        .scale { display: flex; flex-direction: column; gap: var(--space-2); }
+        .scale__row { display: flex; align-items: center; gap: var(--space-3); font-size: var(--fs-xs); font-family: var(--font-mono); color: var(--text-muted); }
+        .scale__bar { height: 16px; background: var(--accent); border-radius: 2px; }
+        .scale__row span:last-child { flex: 0 0 90px; }
+
+        .radii { display: flex; gap: var(--space-4); flex-wrap: wrap; }
+        .radii__box { width: 88px; height: 56px; background: var(--surface); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: var(--fs-xxs); font-family: var(--font-mono); color: var(--text-muted); text-align: center; }
+
+        .type-sample > * { margin-bottom: var(--space-2); }
+
+        /* specimen de botões */
+        .head, .row { display: grid; grid-template-columns: 150px repeat(4, 1fr); align-items: center; gap: var(--space-3); padding: var(--space-2) 0; }
+        .row { border-top: 1px solid var(--border); }
+        .head { font-size: var(--fs-xs); color: var(--text-muted); text-transform: uppercase; letter-spacing: .04em; }
+        .rlabel { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-muted); }
+        .cell { display: flex; }
+        .sizes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
+        .stack { display: flex; flex-direction: column; gap: var(--space-3); }
+        .demo-surface { padding: var(--space-5); background: var(--surface-2); border-radius: var(--radius-lg); }
+
+        /* ===== painel de controles (gerador) ===== */
+        .sg-fab { position: fixed; right: var(--space-4); bottom: var(--space-4); z-index: 50; width: 3em; height: 3em; border-radius: 50%; background: var(--surface); box-shadow: var(--shadow-2), inset 0 0 0 1px var(--border); color: var(--accent); display: flex; align-items: center; justify-content: center; }
+        .sg-fab svg { width: 1.5em; height: 1.5em; }
+        .sg-panel { position: fixed; top: 0; right: 0; z-index: 60; width: 320px; max-width: 90vw; height: 100vh; overflow-y: auto; background: var(--surface); border-left: 1px solid var(--border); box-shadow: var(--shadow-2); padding: var(--space-4); transform: translateX(100%); transition: transform .25s ease; }
+        .sg-panel.is-open { transform: none; }
+        .sg-panel__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--space-4); }
+        .sg-panel h2 { font-size: var(--fs-lg); border: 0; padding: 0; margin: 0; }
+        .sg-group { margin-bottom: var(--space-5); }
+        .sg-group > h3 { font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); margin: 0 0 var(--space-2); }
+        .sg-ctrl { display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2); font-size: var(--fs-sm); }
+        .sg-ctrl label { flex: 1; }
+        .sg-ctrl input[type=color] { width: 2.4em; height: 1.7em; padding: 0; border: 1px solid var(--border); border-radius: var(--radius); }
+        .sg-ctrl input[type=range] { flex: 1.4; min-width: 0; }
+        .sg-ctrl select { flex: 1.4; min-width: 0; }
+        .sg-ctrl input[type=text] { flex: 1.4; min-width: 0; }
+        .sg-note { font-size: var(--fs-xs); color: var(--text-muted); margin-top: var(--space-1); }
+        .sg-ctrl output { font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--text-muted); min-width: 3em; text-align: right; }
+        .sg-out { margin-top: var(--space-3); font-family: var(--font-mono); font-size: var(--fs-xxs); min-height: 8em; }
+    </style>
+</head>
+<body>
+    <!-- ============ PAINEL DE CONTROLES (gerador de tokens) ============ -->
+    <button type="button" class="sg-fab" id="sgFab" title="Controles de tokens" aria-label="Abrir controles de tokens">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="4" y1="8" x2="20" y2="8"/><line x1="4" y1="16" x2="20" y2="16"/><circle cx="9" cy="8" r="2.4" fill="var(--accent)"/><circle cx="15" cy="16" r="2.4" fill="var(--accent)"/></svg>
+    </button>
+    <aside class="sg-panel" id="sgPanel" aria-label="Controles de tokens">
+        <div class="sg-panel__head">
+            <h2>Tokens</h2>
+            <button type="button" class="btn btn--sm" id="sgClose" title="Fechar"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button>
+        </div>
+
+        <div class="sg-group">
+            <div class="sg-ctrl"><label for="themeToggle">Tema escuro</label><label class="switch"><input type="checkbox" id="themeToggle"><span class="switch__track"></span></label></div>
+        </div>
+
+        <div class="sg-group">
+            <h3>Cores</h3>
+            <div class="sg-ctrl"><label for="c-bg">bg</label><input type="color" id="c-bg" data-var="--bg" value="#f4f5f7"></div>
+            <div class="sg-ctrl"><label for="c-surface">surface</label><input type="color" id="c-surface" data-var="--surface" value="#ffffff"></div>
+            <div class="sg-ctrl"><label for="c-text">text</label><input type="color" id="c-text" data-var="--text" value="#1c1e21"></div>
+            <div class="sg-ctrl"><label for="c-muted">text-muted</label><input type="color" id="c-muted" data-var="--text-muted" value="#6a7078"></div>
+            <div class="sg-ctrl"><label for="c-border">border</label><input type="color" id="c-border" data-var="--border" value="#dfe2e7"></div>
+            <div class="sg-ctrl"><label for="c-accent">accent</label><input type="color" id="c-accent" data-var="--accent" value="#3b5bdb"></div>
+            <div class="sg-ctrl"><label for="c-info">info</label><input type="color" id="c-info" data-var="--info" value="#1971c2"></div>
+            <div class="sg-ctrl"><label for="c-ok">ok</label><input type="color" id="c-ok" data-var="--ok" value="#2f9e44"></div>
+            <div class="sg-ctrl"><label for="c-wip">wip</label><input type="color" id="c-wip" data-var="--wip" value="#f08c00"></div>
+            <div class="sg-ctrl"><label for="c-danger">danger</label><input type="color" id="c-danger" data-var="--danger" value="#c0392b"></div>
+        </div>
+
+        <div class="sg-group">
+            <h3>Escala</h3>
+            <div class="sg-ctrl"><label>Espaço base</label><input type="range" data-var="--space-unit" data-unit="px" min="2" max="8" step="1" value="4"><output>4px</output></div>
+            <div class="sg-ctrl"><label>Raio base</label><input type="range" data-var="--radius" data-unit="px" min="0" max="20" step="1" value="4"><output>4px</output></div>
+            <div class="sg-ctrl"><label>Tipo base</label><input type="range" data-var="--fs-base" data-unit="px" min="12" max="20" step="1" value="15"><output>15px</output></div>
+            <div class="sg-ctrl"><label>Entrelinha</label><input type="range" data-var="--lh" min="1.2" max="1.8" step="0.05" value="1.5"><output>1.5</output></div>
+        </div>
+
+        <div class="sg-group">
+            <h3>Fontes por papel</h3>
+            <div class="sg-ctrl"><label for="fontTitulo">Títulos</label><input type="text" id="fontTitulo" value="Noto Sans" autocomplete="off" spellcheck="false"></div>
+            <div class="sg-ctrl"><label for="fontCorpo">Corpo</label><input type="text" id="fontCorpo" value="Noto Sans" autocomplete="off" spellcheck="false"></div>
+            <div class="sg-ctrl"><label for="fontMono">Mono</label><input type="text" id="fontMono" value="Noto Sans Mono" autocomplete="off" spellcheck="false"></div>
+            <p class="sg-note">Cole o nome exato de qualquer família do <a href="https://fonts.google.com" target="_blank" rel="noopener">Google Fonts</a> e tecle Enter. Títulos = h1–h4 · Corpo = texto/UI · Mono = código. O <code>@import</code> entra no CSS exportado.</p>
+        </div>
+
+        <div class="sg-group">
+            <h3>Botões</h3>
+            <div class="sg-ctrl"><label for="fontBtn">Fonte</label><input type="text" id="fontBtn" value="Noto Sans" autocomplete="off" spellcheck="false"></div>
+            <div class="sg-ctrl"><label>Cantos</label><input type="range" data-var="--btn-radius" data-unit="px" min="0" max="24" step="1" value="4"><output>4px</output></div>
+            <div class="sg-ctrl"><label>Altura</label><input type="range" data-var="--btn-height" data-unit="em" min="1.6" max="3" step="0.1" value="2"><output>2em</output></div>
+            <div class="sg-ctrl"><label>Padding X</label><input type="range" data-var="--btn-pad-x" data-unit="em" min="0.25" max="2" step="0.05" value="0.75"><output>0.75em</output></div>
+            <div class="sg-ctrl"><label>Entre letras</label><input type="range" data-var="--btn-tracking" data-unit="em" min="0" max="0.2" step="0.005" value="0.075"><output>0.075em</output></div>
+            <div class="sg-ctrl"><label>Peso</label><input type="range" data-var="--btn-weight" min="300" max="800" step="100" value="400"><output>400</output></div>
+            <div class="sg-ctrl"><label for="btnTransform">Caixa alta</label>
+                <select id="btnTransform" data-var="--btn-transform">
+                    <option value="uppercase" selected>Sim (uppercase)</option>
+                    <option value="none">Não</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="sg-actions">
+            <button type="button" class="btn btn--primary btn--sm" id="sgExport"><span>Exportar CSS</span></button>
+            <button type="button" class="btn btn--ghost btn--sm" id="sgReset"><span>Restaurar</span></button>
+        </div>
+        <textarea class="sg-out" id="sgOut" readonly placeholder="O CSS gerado aparece aqui (e é copiado para a área de transferência)."></textarea>
+    </aside>
+
+    <h1>Style guide</h1>
+    <p class="lead">
+        Documento vivo, governado pelos <strong>tokens</strong> declarados no <code>:root</code>. Cada bloco abaixo é um
+        <strong>specimen</strong> que só referencia esses tokens — nenhum valor fixo no componente. Alterar uma variável de
+        topo repercute em todos os elementos. (Etapa seguinte: controles interativos que editam os tokens e exportam o CSS.)
+    </p>
+
+    <!-- ================= ÍNDICE ================= -->
+    <nav class="toc" aria-label="Índice">
+        <h2>Índice</h2>
+        <ul>
+            <li><a href="#tokens">Tokens</a></li>
+            <li><a href="#tipografia">Tipografia</a></li>
+            <li><a href="#botoes">Botões</a></li>
+            <li><a href="#form">Form controls</a></li>
+            <li><a href="#badges">Badges &amp; chips</a></li>
+            <li><a href="#avatares">Avatares</a></li>
+            <li><a href="#alerts">Alerts &amp; callouts</a></li>
+            <li><a href="#context">Context-box</a></li>
+            <li><a href="#cards">Cards</a></li>
+            <li><a href="#tabelas">Tabelas</a></li>
+            <li><a href="#accordion">Accordion</a></li>
+            <li><a href="#lista">Lista com ações</a></li>
+            <li><a href="#tree">Item expansível</a></li>
+            <li><a href="#nav">Navegação</a></li>
+            <li><a href="#feedback">Feedback</a></li>
+            <li><a href="#dialog">Dialog / modal</a></li>
+            <li><a href="#toast">Toast</a></li>
+            <li><a href="#empty">Empty state</a></li>
+        </ul>
+    </nav>
+
+    <!-- ================= TOKENS ================= -->
+    <h2 id="tokens">Tokens <a class="anchor" href="#tokens">#</a></h2>
+
+    <h3>Cores</h3>
+    <div class="swatches">
+        <div class="swatch"><div class="swatch__chip" style="background:var(--bg)"></div><div class="swatch__meta"><b>bg</b><span>#f4f5f7</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--surface)"></div><div class="swatch__meta"><b>surface</b><span>#ffffff</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--surface-2)"></div><div class="swatch__meta"><b>surface-2</b><span>#eef0f3</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--text)"></div><div class="swatch__meta"><b>text</b><span>#1c1e21</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--text-muted)"></div><div class="swatch__meta"><b>text-muted</b><span>#6a7078</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--border)"></div><div class="swatch__meta"><b>border</b><span>#dfe2e7</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--border-strong)"></div><div class="swatch__meta"><b>border-strong</b><span>#c4c9d0</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--accent)"></div><div class="swatch__meta"><b>accent</b><span>#3b5bdb</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--info)"></div><div class="swatch__meta"><b>info</b><span>#1971c2</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--ok)"></div><div class="swatch__meta"><b>ok</b><span>#2f9e44 · sucesso</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--wip)"></div><div class="swatch__meta"><b>wip</b><span>#f08c00 · atenção</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--danger)"></div><div class="swatch__meta"><b>danger</b><span>#c0392b · erro</span></div></div>
+        <div class="swatch"><div class="swatch__chip" style="background:var(--todo)"></div><div class="swatch__meta"><b>todo</b><span>#adb5bd · neutro</span></div></div>
+    </div>
+
+    <h3>Espaçamento</h3>
+    <div class="scale">
+        <div class="scale__row"><span>--space-1</span><div class="scale__bar" style="width:var(--space-1)"></div><span>4px</span></div>
+        <div class="scale__row"><span>--space-2</span><div class="scale__bar" style="width:var(--space-2)"></div><span>8px</span></div>
+        <div class="scale__row"><span>--space-3</span><div class="scale__bar" style="width:var(--space-3)"></div><span>12px</span></div>
+        <div class="scale__row"><span>--space-4</span><div class="scale__bar" style="width:var(--space-4)"></div><span>16px</span></div>
+        <div class="scale__row"><span>--space-5</span><div class="scale__bar" style="width:var(--space-5)"></div><span>24px</span></div>
+        <div class="scale__row"><span>--space-6</span><div class="scale__bar" style="width:var(--space-6)"></div><span>32px</span></div>
+        <div class="scale__row"><span>--space-7</span><div class="scale__bar" style="width:var(--space-7)"></div><span>48px</span></div>
+    </div>
+
+    <h3>Raio</h3>
+    <div class="radii">
+        <div class="radii__box" style="border-radius:var(--radius)">--radius<br>4px</div>
+        <div class="radii__box" style="border-radius:var(--radius-lg)">--radius-lg<br>12px</div>
+        <div class="radii__box" style="border-radius:var(--radius-pill)">--radius-pill<br>999px</div>
+    </div>
+
+    <h3>Sombra</h3>
+    <div class="sizes">
+        <div class="radii__box" style="box-shadow:var(--shadow-1);border:0">--shadow-1</div>
+        <div class="radii__box" style="box-shadow:var(--shadow-2);border:0">--shadow-2</div>
+    </div>
+
+    <h3>Escala tipográfica</h3>
+    <div class="type-sample">
+        <div style="font-size:var(--fs-xxs)">--fs-xxs · .7rem — O rato roeu a roupa</div>
+        <div style="font-size:var(--fs-xs)">--fs-xs · .75rem — O rato roeu a roupa</div>
+        <div style="font-size:var(--fs-sm)">--fs-sm · .8125rem — O rato roeu a roupa</div>
+        <div style="font-size:var(--fs-base)">--fs-base · .9375rem — O rato roeu a roupa</div>
+        <div style="font-size:var(--fs-lg)">--fs-lg · 1.125rem — O rato roeu a roupa</div>
+        <div style="font-size:var(--fs-xl)">--fs-xl · 1.5rem — O rato roeu a roupa</div>
+        <div style="font-size:var(--fs-2xl)">--fs-2xl · 2rem — O rato roeu a roupa</div>
+    </div>
+
+    <!-- ================= TIPOGRAFIA ================= -->
+    <h2 id="tipografia">Tipografia <a class="anchor" href="#tipografia">#</a></h2>
+    <div class="type-sample">
+        <h1>H1 — título de tela</h1>
+        <h2 style="border:0;padding:0;margin:0">H2 — título de seção</h2>
+        <h3 style="color:var(--text);margin:0">H3 — subtítulo</h3>
+        <h4>H4 — rótulo</h4>
+        <p>Parágrafo padrão (<code>--fs-base</code>): a fonte e a cor vêm do <code>body</code>. Um <a href="#">link</a> inline, texto em <strong>negrito</strong>, em <em>itálico</em> e um <code>trecho de código</code>. Atalho: <kbd>Ctrl</kbd> + <kbd>K</kbd>.</p>
+        <p style="color:var(--text-muted);font-size:var(--fs-sm)">Texto secundário / muted.</p>
+        <p style="font-family:var(--font-mono)">Mono — Noto Sans Mono.</p>
+        <blockquote>Citação em bloco — recuada, com borda no accent e cor muted.</blockquote>
+        <ul>
+            <li>Lista não ordenada — item um</li>
+            <li>Item dois
+                <ul><li>Sub-item aninhado</li></ul>
+            </li>
+        </ul>
+        <ol>
+            <li>Lista ordenada — passo um</li>
+            <li>Passo dois</li>
+        </ol>
+        <dl style="display:grid;grid-template-columns:auto 1fr;gap:var(--space-1) var(--space-3)">
+            <dt style="font-weight:var(--fw-medium)">Termo</dt><dd style="color:var(--text-muted)">Definição correspondente.</dd>
+            <dt style="font-weight:var(--fw-medium)">Outro</dt><dd style="color:var(--text-muted)">Outra definição.</dd>
+        </dl>
+        <pre>function soma(a, b) {
+    return a + b; // 4 espaços de indentação
+}</pre>
+        <hr>
+    </div>
+
+    <h3>Texto corrido</h3>
+    <article class="prose">
+        <h2>Título do artigo</h2>
+        <p>Este é um bloco de <strong>texto corrido</strong> para verificar o ritmo vertical entre elementos: parágrafos, títulos e listas fluindo em sequência. O espaçamento entre blocos vem de <code>--space-3</code>, e a medida de linha é limitada a <code>68ch</code> para leitura confortável.</p>
+        <p>Um segundo parágrafo mostra como dois blocos de texto se separam. Ele pode conter um <a href="#" onclick="return false">link inline</a>, texto em <em>itálico</em> e trechos em <code>monoespaçado</code> sem quebrar o fluxo.</p>
+
+        <h3>Subtítulo de seção</h3>
+        <p>Depois de um subtítulo, o parágrafo continua. Abaixo, uma lista não ordenada com um nível de aninhamento:</p>
+        <ul>
+            <li>Primeiro item da lista</li>
+            <li>Segundo item, com sub-itens:
+                <ul>
+                    <li>Sub-item A</li>
+                    <li>Sub-item B</li>
+                </ul>
+            </li>
+            <li>Terceiro item</li>
+        </ul>
+        <p>E uma lista ordenada para passos em sequência:</p>
+        <ol>
+            <li>Primeiro passo do processo</li>
+            <li>Segundo passo</li>
+            <li>Terceiro passo</li>
+        </ol>
+
+        <h4>Rótulo menor (h4)</h4>
+        <p>Fechando o bloco, uma citação destacada:</p>
+        <blockquote>“O conteúdo primeiro; o estilo depois. Mas os dois governados pelos mesmos tokens.”</blockquote>
+    </article>
+
+    <!-- ================= BOTÕES ================= -->
+    <h2 id="botoes">Botões <a class="anchor" href="#botoes">#</a></h2>
+
+    <h3>Tamanhos (= font-size)</h3>
+    <div class="sizes">
+        <button class="btn btn--primary" style="font-size:.75rem"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>.75rem</span></button>
+        <button class="btn btn--primary" style="font-size:.875rem"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>.875rem</span></button>
+        <button class="btn btn--primary" style="font-size:1rem"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>1rem</span></button>
+        <button class="btn btn--primary" style="font-size:1.25rem"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>1.25rem</span></button>
+        <button class="btn btn--primary" style="font-size:1.5rem"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>1.5rem</span></button>
+        <button class="btn btn--primary" disabled><span>Disabled</span></button>
+    </div>
+
+    <h3>Variantes de cor × conteúdo</h3>
+    <div class="head">
+        <div></div><div>texto</div><div>ícone</div><div>ícone + texto</div><div>texto + ícone</div>
+    </div>
+
+    <div class="row">
+        <div class="rlabel">.btn</div>
+        <div class="cell"><button class="btn"><span>Texto</span></button></div>
+        <div class="cell"><button class="btn"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+        <div class="cell"><button class="btn"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Texto</span></button></div>
+        <div class="cell"><button class="btn"><span>Texto</span><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+    </div>
+
+    <div class="row">
+        <div class="rlabel">.btn--ghost</div>
+        <div class="cell"><button class="btn btn--ghost"><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--ghost"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+        <div class="cell"><button class="btn btn--ghost"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--ghost"><span>Texto</span><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+    </div>
+
+    <div class="row">
+        <div class="rlabel">.btn--primary</div>
+        <div class="cell"><button class="btn btn--primary"><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--primary"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+        <div class="cell"><button class="btn btn--primary"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--primary"><span>Texto</span><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+    </div>
+
+    <div class="row">
+        <div class="rlabel">.btn--danger</div>
+        <div class="cell"><button class="btn btn--danger"><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--danger"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+        <div class="cell"><button class="btn btn--danger"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--danger"><span>Texto</span><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+    </div>
+
+    <div class="row">
+        <div class="rlabel">.btn--danger-solid</div>
+        <div class="cell"><button class="btn btn--danger-solid"><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--danger-solid"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+        <div class="cell"><button class="btn btn--danger-solid"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--danger-solid"><span>Texto</span><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+    </div>
+
+    <div class="row">
+        <div class="rlabel">.btn--link</div>
+        <div class="cell"><button class="btn btn--link"><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--link"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+        <div class="cell"><button class="btn btn--link"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Texto</span></button></div>
+        <div class="cell"><button class="btn btn--link"><span>Texto</span><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></div>
+    </div>
+
+    <h3>Estados — confirmar / status</h3>
+    <div class="sizes">
+        <button class="btn btn--sign"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M22.24,31.77l-6.42-6.42,1.6-1.6,4.81,4.81,10.33-10.33,1.6,1.6-11.93,11.93Z"/></svg><span>Concluir</span></button>
+        <button class="btn btn--sign is-ready"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M22.24,31.77l-6.42-6.42,1.6-1.6,4.81,4.81,10.33-10.33,1.6,1.6-11.93,11.93Z"/></svg><span>Concluir</span></button>
+        <button class="btn btn--sign is-done"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M22.24,31.77l-6.42-6.42,1.6-1.6,4.81,4.81,10.33-10.33,1.6,1.6-11.93,11.93Z"/></svg><span>Concluída</span></button>
+    </div>
+    <div class="sizes" style="margin-top:var(--space-4)">
+        <button class="btn state-btn--todo"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button>
+        <button class="btn state-btn--wip"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button>
+        <button class="btn state-btn--done"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M22.24,31.77l-6.42-6.42,1.6-1.6,4.81,4.81,10.33-10.33,1.6,1.6-11.93,11.93Z"/></svg></button>
+        <button class="btn stage-state--todo"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Não iniciado</span></button>
+        <button class="btn stage-state--wip"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Em andamento</span></button>
+        <button class="btn stage-state--done"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M22.24,31.77l-6.42-6.42,1.6-1.6,4.81,4.81,10.33-10.33,1.6,1.6-11.93,11.93Z"/></svg><span>Concluído</span></button>
+    </div>
+
+    <!-- ================= FORM CONTROLS ================= -->
+    <h2 id="form">Form controls <a class="anchor" href="#form">#</a></h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:var(--space-5)">
+        <div>
+            <div class="field">
+                <label for="sg-in">Campo de texto</label>
+                <input id="sg-in" placeholder="Digite aqui…" autocomplete="off">
+            </div>
+            <div class="field">
+                <label for="sg-hint">Com dica</label>
+                <input id="sg-hint" placeholder="usuário" autocomplete="off">
+                <span class="field__hint">Sem espaços, minúsculas.</span>
+            </div>
+            <div class="field field--error">
+                <label for="sg-err">Com erro</label>
+                <input id="sg-err" value="valor inválido">
+                <span class="field__error">Este campo é obrigatório.</span>
+            </div>
+            <div class="field">
+                <label for="sg-dis">Desabilitado</label>
+                <input id="sg-dis" value="somente leitura" disabled>
+            </div>
+            <div class="field">
+                <label for="sg-sel">Select</label>
+                <select id="sg-sel">
+                    <option>Opção A</option><option>Opção B</option><option>Opção C</option>
+                </select>
+            </div>
+            <div class="field">
+                <label for="sg-file">Arquivo</label>
+                <input id="sg-file" type="file">
+            </div>
+        </div>
+        <div>
+            <div class="field">
+                <label for="sg-ta">Área de texto</label>
+                <textarea id="sg-ta" class="note-field" placeholder="Notas, decisões e pendências…"></textarea>
+            </div>
+            <div class="field">
+                <label>Checkbox</label>
+                <label class="choice"><input type="checkbox" checked> Opção marcada</label>
+                <label class="choice"><input type="checkbox"> Opção desmarcada</label>
+                <label class="choice"><input type="checkbox" disabled> Desabilitada</label>
+            </div>
+            <div class="field">
+                <label>Radio</label>
+                <label class="choice"><input type="radio" name="r" checked> Alternativa 1</label>
+                <label class="choice"><input type="radio" name="r"> Alternativa 2</label>
+            </div>
+            <div class="field">
+                <label>Switch</label>
+                <label class="switch"><input type="checkbox" checked><span class="switch__track"></span> Ativado</label>
+                <label class="switch"><input type="checkbox"><span class="switch__track"></span> Desativado</label>
+            </div>
+            <div class="field">
+                <label for="sg-range">Range</label>
+                <input id="sg-range" type="range" min="0" max="100" value="60">
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= BADGES & CHIPS ================= -->
+    <h2 id="badges">Badges &amp; chips <a class="anchor" href="#badges">#</a></h2>
+    <div class="stack">
+        <div class="sizes">
+            <span class="badge">Neutro</span>
+            <span class="badge badge--info">Info</span>
+            <span class="badge badge--ok">Sucesso</span>
+            <span class="badge badge--wip">Atenção</span>
+            <span class="badge badge--danger">Erro</span>
+        </div>
+        <div class="sizes">
+            <span class="dot"></span><span class="dot dot--info"></span><span class="dot dot--ok"></span><span class="dot dot--wip"></span><span class="dot dot--danger"></span>
+            <span class="faint" style="font-size:var(--fs-sm)">status dots</span>
+        </div>
+        <div class="sizes">
+            <span class="chip">Tag simples</span>
+            <span class="chip">Removível <button class="chip__x" type="button" title="Remover"><svg viewBox="0 0 50 50" aria-hidden="true"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button></span>
+            <span class="chip">Outra <button class="chip__x" type="button" title="Remover"><svg viewBox="0 0 50 50" aria-hidden="true"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button></span>
+        </div>
+    </div>
+
+    <!-- ================= AVATARES ================= -->
+    <h2 id="avatares">Avatares <a class="anchor" href="#avatares">#</a></h2>
+    <div class="sizes">
+        <span class="avatar">AB</span>
+        <span class="avatar" style="background:var(--ok)">CD</span>
+        <span class="avatar" style="width:3.5em;height:3.5em">EF</span>
+        <span class="avatar-group">
+            <span class="avatar">AB</span><span class="avatar" style="background:var(--wip)">CD</span><span class="avatar" style="background:var(--info)">EF</span><span class="avatar" style="background:var(--text-muted)">+3</span>
+        </span>
+    </div>
+
+    <!-- ================= ALERTS ================= -->
+    <h2 id="alerts">Alerts &amp; callouts <a class="anchor" href="#alerts">#</a></h2>
+    <div class="stack">
+        <div class="alert alert--info"><div><div class="alert__title">Informação</div><div class="alert__body">Mensagem neutra de contexto.</div></div></div>
+        <div class="alert alert--ok"><div><div class="alert__title">Sucesso</div><div class="alert__body">A ação foi concluída.</div></div></div>
+        <div class="alert alert--wip"><div><div class="alert__title">Atenção</div><div class="alert__body">Revise antes de continuar.</div></div></div>
+        <div class="alert alert--danger"><div><div class="alert__title">Erro</div><div class="alert__body">Algo deu errado ao salvar.</div></div></div>
+    </div>
+
+    <!-- ================= CONTEXT-BOX ================= -->
+    <h2 id="context">Context-box <a class="anchor" href="#context">#</a></h2>
+    <div class="stack">
+        <div class="context-box context-box--welcome">
+            <div class="context-box__text"><b>Bem-vindo</b><p>Bloco de destaque com texto e ações à direita. <a href="#" onclick="return false">Saiba mais</a>.</p></div>
+            <div class="context-box__actions"><button type="button" class="btn btn--primary"><span>Ação primária</span></button><button type="button" class="btn btn--ghost"><span>Secundária</span></button></div>
+        </div>
+        <div class="context-box">
+            <div class="context-box__text"><b>Estado neutro</b><p>Variante padrão, sem destaque de cor.</p></div>
+            <div class="context-box__actions"><button type="button" class="btn btn--ghost"><span>Ação</span></button></div>
+        </div>
+    </div>
+
+    <!-- ================= CARDS ================= -->
+    <h2 id="cards">Cards <a class="anchor" href="#cards">#</a></h2>
+    <ul class="card-grid">
+        <li class="card">
+            <a class="card__link" href="#" onclick="return false">
+                <span class="card__cover"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='10'><rect width='16' height='10' fill='%233b5bdb'/></svg>" alt=""></span>
+                <div class="card__body">
+                    <div class="card__top">
+                        <div><h3 class="card__title">Título do card</h3><div class="card__sub">Subtítulo</div></div>
+                        <span class="badge">Tag</span>
+                    </div>
+                    <div class="card__meta"><span><b>5</b> itens</span><span><b>8</b> pessoas</span></div>
+                </div>
+            </a>
+        </li>
+        <li class="card">
+            <a class="card__link" href="#" onclick="return false">
+                <div class="card__body">
+                    <div class="card__top">
+                        <div><h3 class="card__title">Sem capa</h3><div class="card__sub">Subtítulo</div></div>
+                        <span class="badge">Tag</span>
+                    </div>
+                    <div class="card__meta"><span><b>1</b> item</span><span><b>2</b> pessoas</span></div>
+                </div>
+            </a>
+        </li>
+        <li class="card card--new"><button type="button" class="card__new"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Novo item</span></button></li>
+    </ul>
+
+    <!-- ================= TABELAS ================= -->
+    <h2 id="tabelas">Tabelas <a class="anchor" href="#tabelas">#</a></h2>
+    <table class="table">
+        <thead><tr><th>Nome</th><th>Status</th><th class="num">Qtd.</th><th></th></tr></thead>
+        <tbody>
+            <tr><td>Primeiro registro</td><td><span class="badge badge--ok">Ativo</span></td><td class="num">12</td><td><a href="#" onclick="return false">editar</a></td></tr>
+            <tr><td>Segundo registro</td><td><span class="badge badge--wip">Pendente</span></td><td class="num">4</td><td><a href="#" onclick="return false">editar</a></td></tr>
+            <tr><td>Terceiro registro</td><td><span class="badge badge--danger">Bloqueado</span></td><td class="num">0</td><td><a href="#" onclick="return false">editar</a></td></tr>
+        </tbody>
+    </table>
+
+    <!-- ================= ACCORDION ================= -->
+    <h2 id="accordion">Accordion <a class="anchor" href="#accordion">#</a></h2>
+    <section class="section">
+        <h3 class="section__heading">
+            <button type="button" class="btn"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M25,29.01l-6.5-6.5,1.52-1.52,4.98,4.98,4.98-4.98,1.52,1.52-6.5,6.5Z"/></svg><span>Seção aberta <span class="count">3</span></span></button>
+        </h3>
+        <div class="section__body"><p class="faint">Corpo da seção aberta.</p></div>
+    </section>
+    <section class="section is-collapsed" style="margin-top:var(--space-3)">
+        <h3 class="section__heading">
+            <button type="button" class="btn"><svg class="ic rot-right" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M25,29.01l-6.5-6.5,1.52-1.52,4.98,4.98,4.98-4.98,1.52,1.52-6.5,6.5Z"/></svg><span>Seção recolhida <span class="count">5</span></span></button>
+        </h3>
+        <div class="section__body"><p>Escondido por <code>.is-collapsed</code>.</p></div>
+    </section>
+
+    <!-- ================= LISTA COM AÇÕES ================= -->
+    <h2 id="lista">Lista com ações <a class="anchor" href="#lista">#</a></h2>
+    <ol class="list">
+        <li class="list-row">
+            <a class="list-row__link" href="#" onclick="return false">
+                <span class="list-row__num">1</span>
+                <span class="list-row__main">
+                    <span class="list-row__title">Item da lista</span>
+                    <span class="list-row__sub">Metadado secundário</span>
+                    <span class="list-row__status">Status pendente</span>
+                </span>
+            </a>
+            <div class="row-actions">
+                <button type="button" class="btn btn--sm" title="Subir"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,34v-13.7l-6.3,6.3-1.58-1.6,9-9,9,9-1.58,1.6-6.3-6.3v13.7h-2.25Z"/></svg></button>
+                <button type="button" class="btn btn--sm" title="Descer"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,16v13.7l-6.3-6.3-1.58,1.6,9,9,9-9-1.58-1.6-6.3,6.3v-13.7h-2.25Z"/></svg></button>
+                <button type="button" class="btn btn--sm" title="Excluir"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M19.44,35c-.61,0-1.13-.22-1.57-.65-.44-.44-.65-.96-.65-1.57v-14.44h-1.11v-2.22h5.56v-1.11h6.67v1.11h5.56v2.22h-1.11v14.44c0,.61-.22,1.13-.65,1.57-.44.44-.96.65-1.57.65h-11.11ZM30.56,18.33h-11.11v14.44h11.11v-14.44ZM21.67,30.56h2.22v-10h-2.22v10ZM26.11,30.56h2.22v-10h-2.22v10ZM19.44,18.33v14.44-14.44Z"/></svg></button>
+            </div>
+        </li>
+    </ol>
+
+    <!-- ================= ITEM EXPANSÍVEL ================= -->
+    <h2 id="tree">Item expansível <a class="anchor" href="#tree">#</a></h2>
+    <ul class="tree">
+        <li class="tree-item">
+            <div class="tree-item__top">
+                <button type="button" class="btn" title="Recolher/expandir"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M25,29.01l-6.5-6.5,1.52-1.52,4.98,4.98,4.98-4.98,1.52,1.52-6.5,6.5Z"/></svg></button>
+                <input class="tree-item__name" value="Item pai" aria-label="Nome do item">
+                <div class="row-actions">
+                    <button type="button" class="btn btn--sm" title="Subir"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,34v-13.7l-6.3,6.3-1.58-1.6,9-9,9,9-1.58,1.6-6.3-6.3v13.7h-2.25Z"/></svg></button>
+                    <button type="button" class="btn btn--sm" title="Descer"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,16v13.7l-6.3-6.3-1.58,1.6,9,9,9-9-1.58-1.6-6.3,6.3v-13.7h-2.25Z"/></svg></button>
+                    <button type="button" class="btn btn--sm" title="Remover"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M19.44,35c-.61,0-1.13-.22-1.57-.65-.44-.44-.65-.96-.65-1.57v-14.44h-1.11v-2.22h5.56v-1.11h6.67v1.11h5.56v2.22h-1.11v14.44c0,.61-.22,1.13-.65,1.57-.44.44-.96.65-1.57.65h-11.11ZM30.56,18.33h-11.11v14.44h11.11v-14.44ZM21.67,30.56h2.22v-10h-2.22v10ZM26.11,30.56h2.22v-10h-2.22v10ZM19.44,18.33v14.44-14.44Z"/></svg></button>
+                </div>
+            </div>
+            <ul class="tree-item__children">
+                <li class="sub-row"><input class="sub-row__input" value="Sub-item" aria-label="Sub-item"><button type="button" class="btn btn--sm" title="Remover"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button></li>
+                <li class="sub-row sub-row--add"><input class="sub-row__input" placeholder="+ adicionar (Enter)" aria-label="Adicionar sub-item"><button type="button" class="btn btn--sm" title="Adicionar"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg></button></li>
+            </ul>
+        </li>
+    </ul>
+
+    <!-- ================= NAVEGAÇÃO ================= -->
+    <h2 id="nav">Navegação <a class="anchor" href="#nav">#</a></h2>
+
+    <h3>Tabs</h3>
+    <div class="tabs">
+        <button class="tab is-active">Visão geral</button>
+        <button class="tab">Detalhes</button>
+        <button class="tab">Histórico</button>
+    </div>
+
+    <h3>Breadcrumb</h3>
+    <ol class="breadcrumb">
+        <li><a href="#" onclick="return false">Início</a></li>
+        <li><a href="#" onclick="return false">Seção</a></li>
+        <li aria-current="page">Página atual</li>
+    </ol>
+
+    <h3>Paginação</h3>
+    <ul class="pagination">
+        <li><a href="#" onclick="return false">‹</a></li>
+        <li><a href="#" aria-current="page" onclick="return false">1</a></li>
+        <li><a href="#" onclick="return false">2</a></li>
+        <li><a href="#" onclick="return false">3</a></li>
+        <li><a href="#" onclick="return false">›</a></li>
+    </ul>
+
+    <!-- ================= FEEDBACK ================= -->
+    <h2 id="feedback">Feedback <a class="anchor" href="#feedback">#</a></h2>
+
+    <h3>Progress &amp; meter</h3>
+    <div class="stack" style="max-width:360px">
+        <div class="progress"><div class="progress__bar" style="width:60%"></div></div>
+        <progress value="0.4" max="1"></progress>
+        <meter value="0.7" min="0" max="1"></meter>
+    </div>
+
+    <h3>Spinner &amp; skeleton</h3>
+    <div class="sizes" style="align-items:flex-start">
+        <div class="spinner"></div>
+        <div style="flex:1;max-width:360px;display:flex;flex-direction:column;gap:var(--space-2)">
+            <div class="skeleton" style="height:14px;width:70%"></div>
+            <div class="skeleton" style="height:14px;width:90%"></div>
+            <div class="skeleton" style="height:14px;width:50%"></div>
+        </div>
+    </div>
+
+    <h3>Tooltip</h3>
+    <div class="sizes">
+        <button class="btn btn--ghost tip" data-tip="Dica no hover"><span>Passe o mouse</span></button>
+    </div>
+
+    <!-- ================= DIALOG ================= -->
+    <h2 id="dialog">Dialog / modal <a class="anchor" href="#dialog">#</a></h2>
+    <div class="demo-surface" style="display:flex;justify-content:center">
+        <div class="dialog">
+            <div class="dialog__head">
+                <span class="dialog__title">Confirmar ação</span>
+                <button type="button" class="btn btn--sm" title="Fechar"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button>
+            </div>
+            <div class="dialog__body">Esta ação não pode ser desfeita. Deseja continuar?</div>
+            <div class="dialog__foot">
+                <button type="button" class="btn btn--ghost"><span>Cancelar</span></button>
+                <button type="button" class="btn btn--danger-solid"><span>Excluir</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= TOAST ================= -->
+    <h2 id="toast">Toast <a class="anchor" href="#toast">#</a></h2>
+    <div class="stack" style="max-width:360px">
+        <div class="toast"><div class="toast__body">Notificação neutra.</div><button class="chip__x" type="button" title="Fechar"><svg viewBox="0 0 50 50" aria-hidden="true"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button></div>
+        <div class="toast toast--ok"><div class="toast__body">Salvo com sucesso.</div><button class="chip__x" type="button" title="Fechar"><svg viewBox="0 0 50 50" aria-hidden="true"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button></div>
+        <div class="toast toast--danger"><div class="toast__body">Falha ao processar.</div><button class="chip__x" type="button" title="Fechar"><svg viewBox="0 0 50 50" aria-hidden="true"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button></div>
+    </div>
+
+    <!-- ================= EMPTY STATE ================= -->
+    <h2 id="empty">Empty state <a class="anchor" href="#empty">#</a></h2>
+    <div class="empty">
+        <svg viewBox="0 0 50 50" aria-hidden="true"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg>
+        <p><strong>Nada por aqui ainda</strong></p>
+        <p class="faint" style="font-size:var(--fs-sm)">Crie o primeiro item para começar.</p>
+        <button type="button" class="btn btn--primary" style="margin-top:var(--space-2)"><span>Criar item</span></button>
+    </div>
+
+    <script>
+    (function () {
+        var root = document.documentElement;
+        var panel = document.getElementById('sgPanel');
+        document.getElementById('sgFab').addEventListener('click', function () { panel.classList.toggle('is-open'); });
+        document.getElementById('sgClose').addEventListener('click', function () { panel.classList.remove('is-open'); });
+
+        var controls = Array.prototype.slice.call(panel.querySelectorAll('[data-var]'));
+        var defaults = {};
+        controls.forEach(function (el) { defaults[el.dataset.var] = el.value; });
+
+        function apply(el) {
+            var unit = el.dataset.unit || '';
+            root.style.setProperty(el.dataset.var, el.value + unit);
+            var out = el.parentElement.querySelector('output');
+            if (out) out.textContent = el.value + unit;
+        }
+        controls.forEach(function (el) { el.addEventListener('input', function () { apply(el); }); });
+
+        /* ---- tema claro/escuro (paleta) ---- */
+        var DEFAULT_PALETTES = {
+            light: { '--bg': '#f4f5f7', '--surface': '#ffffff', '--surface-2': '#eef0f3', '--text': '#1c1e21', '--text-muted': '#6a7078', '--border': '#dfe2e7', '--border-strong': '#c4c9d0', '--text-onaccent': '#ffffff', '--accent': '#3b5bdb', '--info': '#1971c2', '--ok': '#2f9e44', '--wip': '#f08c00', '--danger': '#c0392b', '--todo': '#adb5bd' },
+            dark:  { '--bg': '#16181d', '--surface': '#1e2127', '--surface-2': '#262a31', '--text': '#e8eaed', '--text-muted': '#9aa0a8', '--border': '#2e333b', '--border-strong': '#3d434d', '--text-onaccent': '#ffffff', '--accent': '#5c7cfa', '--info': '#4dabf7', '--ok': '#51cf66', '--wip': '#ffa94d', '--danger': '#ff6b6b', '--todo': '#495057' }
+        };
+        function clonePalettes(src) { return { light: Object.assign({}, src.light), dark: Object.assign({}, src.dark) }; }
+        var palettes = clonePalettes(DEFAULT_PALETTES);
+        var currentTheme = 'light';
+        var colorInputs = Array.prototype.slice.call(panel.querySelectorAll('input[type=color]'));
+
+        function applyTheme(theme) {
+            currentTheme = theme;
+            var pal = palettes[theme];
+            for (var k in pal) root.style.setProperty(k, pal[k]);
+            colorInputs.forEach(function (el) { if (pal[el.dataset.var]) el.value = pal[el.dataset.var]; });
+            root.setAttribute('data-theme', theme);
+        }
+        colorInputs.forEach(function (el) {
+            el.addEventListener('input', function () { palettes[currentTheme][el.dataset.var] = el.value; });
+        });
+        var themeToggle = document.getElementById('themeToggle');
+        themeToggle.addEventListener('change', function () { applyTheme(themeToggle.checked ? 'dark' : 'light'); });
+
+        function get(v) {
+            return controls.filter(function (el) { return el.dataset.var === v; })[0].value;
+        }
+
+        /* ---- fontes por papel (Google Fonts sob demanda) ---- */
+        function loadGoogleFont(family) {
+            var id = 'gf-' + family.replace(/\s+/g, '-');
+            if (document.getElementById(id)) return;
+            var link = document.createElement('link');
+            link.id = id;
+            link.rel = 'stylesheet';
+            link.href = 'https://fonts.googleapis.com/css2?family=' + family.replace(/\s+/g, '+') + ':wght@400;600;700&display=swap';
+            document.head.appendChild(link);
+        }
+
+        var roles = [
+            { id: 'fontTitulo', varName: '--font-titulo', fallback: 'system-ui, sans-serif',  def: 'Noto Sans' },
+            { id: 'fontCorpo',  varName: '--font-corpo',  fallback: 'system-ui, sans-serif',  def: 'Noto Sans' },
+            { id: 'fontMono',   varName: '--font-mono',   fallback: 'ui-monospace, monospace', def: 'Noto Sans Mono' },
+            { id: 'fontBtn',    varName: '--font-btn',    fallback: 'system-ui, sans-serif',  def: 'Noto Sans' }
+        ];
+
+        function defaultStack(r) { return '"' + r.def + '", ' + r.fallback; }
+
+        roles.forEach(function (r) {
+            r.family = r.def;
+            r.loaded = false;
+            r.stack = defaultStack(r);
+            var input = document.getElementById(r.id);
+            input.addEventListener('change', function () {
+                var fam = input.value.trim();
+                if (!fam) {
+                    r.family = null; r.loaded = false; r.stack = defaultStack(r);
+                    root.style.removeProperty(r.varName);
+                    return;
+                }
+                loadGoogleFont(fam);
+                r.family = fam; r.loaded = true;
+                r.stack = '"' + fam + '", ' + r.fallback;
+                root.style.setProperty(r.varName, r.stack);
+            });
+        });
+
+        document.getElementById('sgExport').addEventListener('click', function () {
+            var u = parseFloat(get('--space-unit'));
+            var r = parseFloat(get('--radius'));
+            var f = parseFloat(get('--fs-base'));
+            var round = function (n) { return Math.round(n * 100) / 100; };
+            var css =
+':root {\n' +
+'    /* cores */\n' +
+'    --bg: ' + get('--bg') + '; --surface: ' + get('--surface') + '; --text: ' + get('--text') + '; --text-muted: ' + get('--text-muted') + ';\n' +
+'    --border: ' + get('--border') + '; --accent: ' + get('--accent') + '; --info: ' + get('--info') + ';\n' +
+'    --ok: ' + get('--ok') + '; --wip: ' + get('--wip') + '; --danger: ' + get('--danger') + ';\n' +
+'    /* espaçamento */\n' +
+'    --space-1: ' + (u * 1) + 'px; --space-2: ' + (u * 2) + 'px; --space-3: ' + (u * 3) + 'px; --space-4: ' + (u * 4) + 'px;\n' +
+'    --space-5: ' + (u * 6) + 'px; --space-6: ' + (u * 8) + 'px; --space-7: ' + (u * 12) + 'px;\n' +
+'    /* raio */\n' +
+'    --radius: ' + r + 'px; --radius-lg: ' + (r * 3) + 'px; --radius-pill: 999px;\n' +
+'    /* tipografia */\n' +
+'    --font-titulo: ' + roles[0].stack + ';\n' +
+'    --font-corpo: ' + roles[1].stack + ';\n' +
+'    --font-mono: ' + roles[2].stack + ';\n' +
+'    --fs-xxs: ' + round(f * 0.747) + 'px; --fs-xs: ' + round(f * 0.8) + 'px; --fs-sm: ' + round(f * 0.867) + 'px;\n' +
+'    --fs-base: ' + f + 'px; --fs-lg: ' + round(f * 1.2) + 'px; --fs-xl: ' + round(f * 1.6) + 'px; --fs-2xl: ' + round(f * 2.133) + 'px;\n' +
+'    --lh: ' + get('--lh') + ';\n' +
+'    /* botões */\n' +
+'    --btn-radius: ' + get('--btn-radius') + 'px; --btn-height: ' + get('--btn-height') + 'em; --btn-pad-x: ' + get('--btn-pad-x') + 'em;\n' +
+'    --btn-transform: ' + get('--btn-transform') + '; --btn-tracking: ' + get('--btn-tracking') + 'em; --btn-weight: ' + get('--btn-weight') + ';\n' +
+'    --font-btn: ' + roles[3].stack + ';\n' +
+'}';
+            var seen = {}, imports = '';
+            roles.forEach(function (r) {
+                if (r.loaded && r.family && !seen[r.family]) {
+                    seen[r.family] = 1;
+                    imports += "@import url('https://fonts.googleapis.com/css2?family=" + r.family.replace(/\s+/g, '+') + ":wght@400;600;700&display=swap');\n";
+                }
+            });
+            if (imports) css = imports + '\n' + css;
+            document.getElementById('sgOut').value = css;
+            if (navigator.clipboard) navigator.clipboard.writeText(css).catch(function () {});
+        });
+
+        document.getElementById('sgReset').addEventListener('click', function () {
+            controls.forEach(function (el) {
+                el.value = defaults[el.dataset.var];
+                root.style.removeProperty(el.dataset.var);
+                var out = el.parentElement.querySelector('output');
+                if (out) out.textContent = el.value + (el.dataset.unit || '');
+            });
+            roles.forEach(function (r) {
+                document.getElementById(r.id).value = r.def;
+                root.style.removeProperty(r.varName);
+                r.family = r.def; r.loaded = false; r.stack = defaultStack(r);
+            });
+            palettes = clonePalettes(DEFAULT_PALETTES);
+            currentTheme = 'light';
+            themeToggle.checked = false;
+            ['--surface-2', '--border-strong', '--text-onaccent', '--todo'].forEach(function (v) { root.style.removeProperty(v); });
+            root.removeAttribute('data-theme');
+            document.getElementById('sgOut').value = '';
+        });
+    })();
+    </script>
+</body>
+</html>
