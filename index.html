@@ -1198,7 +1198,7 @@
         }
         function applyIcon(text) {
             var tmp = document.createElement('div');
-            tmp.innerHTML = String(text).replace(/<script[\s\S]*?<\/script>/gi, '');
+            tmp.innerHTML = String(text).replace(new RegExp('<' + 'script[\\s\\S]*?</' + 'script>', 'gi'), '');
             var svg = tmp.querySelector('svg');
             if (!svg) return;
             var vb = svg.getAttribute('viewBox') || '0 0 24 24', inner = svg.innerHTML;
@@ -1363,8 +1363,9 @@
                 '</main>'
             ].join('\n');
 
+            var st = '<' + 'script>', et = '</' + 'script>';
             var doc = '<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Design system</title>\n<style>\n' +
-                styleContent + '\n</style>\n</head>\n<body>\n' + sample + '\n<script>\n' + COMPONENT_JS + '\n<\/script>\n</body>\n</html>\n';
+                styleContent + '\n</style>\n</head>\n<body>\n' + sample + '\n' + st + '\n' + COMPONENT_JS + '\n' + et + '\n</body>\n</html>\n';
 
             document.getElementById('sgOut').value = doc;
             if (navigator.clipboard) navigator.clipboard.writeText(doc).catch(function () {});
