@@ -463,8 +463,8 @@
 
         <div class="sg-group">
             <h3>Ícones (Material)</h3>
-            <input type="file" id="iconFile" accept=".svg,image/svg+xml" style="width:100%">
-            <p class="sg-note">Suba um SVG no padrão <b>Material Icons</b> (viewBox <code>0 0 24 24</code>, sem área de proteção). Ele substitui <b>todos os ícones</b> do guia. Como o Material não tem a folga dos ícones atuais, eles ficam maiores/mais colados — comportamento esperado. <b>Restaurar</b> volta os originais.</p>
+            <textarea id="iconPaste" rows="3" placeholder="Cole aqui o SVG (padrão Material Icons)…" spellcheck="false" style="width:100%;font-family:var(--font-mono);font-size:var(--fs-xxs)"></textarea>
+            <p class="sg-note">Cole o código <b>SVG</b> no padrão <b>Material Icons</b> (viewBox <code>0 0 24 24</code>, sem área de proteção). Ele substitui <b>todos os ícones</b> do guia. Como o Material não tem a folga dos atuais, ficam maiores/mais colados — comportamento esperado. Apagar o campo (ou <b>Restaurar</b>) volta os originais.</p>
         </div>
 
         <div class="sg-actions">
@@ -1204,12 +1204,10 @@
             var vb = svg.getAttribute('viewBox') || '0 0 24 24', inner = svg.innerHTML;
             iconSnaps.forEach(function (s) { s.el.setAttribute('viewBox', vb); s.el.innerHTML = inner; });
         }
-        document.getElementById('iconFile').addEventListener('change', function () {
-            var f = this.files && this.files[0];
-            if (!f) return;
-            var reader = new FileReader();
-            reader.onload = function () { applyIcon(reader.result); };
-            reader.readAsText(f);
+        document.getElementById('iconPaste').addEventListener('input', function () {
+            var v = this.value.trim();
+            if (!v) { restoreIcons(); return; }
+            if (v.indexOf('<svg') > -1) applyIcon(v);
         });
 
         /* ---- paleta aleatória (HSL com regras + contraste) ---- */
@@ -1400,7 +1398,7 @@
             ['--surface-2', '--border-strong', '--text-onaccent', '--todo'].forEach(function (v) { root.style.removeProperty(v); });
             root.removeAttribute('data-theme');
             restoreIcons();
-            document.getElementById('iconFile').value = '';
+            document.getElementById('iconPaste').value = '';
             document.getElementById('sgOut').value = '';
         });
     })();
