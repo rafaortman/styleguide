@@ -34,7 +34,7 @@
                 --font-mono: "Noto Sans Mono", ui-monospace, monospace;
                 --lh-tight: 1.2; --fw: 400; --fw-medium: 600; --fw-bold: 700;
                 --ring: 2px; --control-h: 2em;
-                --btn-radius: 4px; --btn-height: 2em; --btn-pad-x: .75em; --btn-transform: uppercase; --btn-tracking: .075em; --btn-weight: 400;
+                --btn-radius: 4px; --btn-height: 2em; --btn-pad-x: .75em; --btn-pad-y: 0em; --btn-transform: uppercase; --btn-tracking: .075em; --btn-weight: 400;
                 --shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.08);
                 --shadow-2: 0 8px 24px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
 
@@ -61,11 +61,13 @@
 
         @layer base {
             body { font-family: var(--font-corpo); font-size: var(--fs-base); line-height: var(--lh); font-weight: var(--fw); color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
-            h1, h2, h3, h4 { font-family: var(--font-titulo); }
+            h1, h2, h3, h4, h5, h6 { font-family: var(--font-titulo); }
             h1 { font-size: var(--h1-fs, var(--fs-2xl)); font-weight: var(--h1-fw, var(--fw-medium)); line-height: var(--h1-lh, var(--lh-tight)); letter-spacing: var(--h1-ls, normal); margin-bottom: var(--h1-mb, 0); border-bottom: var(--h1-bw, 0) solid var(--h1-bc, var(--border)); }
             h2 { font-size: var(--h2-fs, var(--fs-xl)); font-weight: var(--h2-fw, var(--fw-medium)); line-height: var(--h2-lh, var(--lh-tight)); letter-spacing: var(--h2-ls, normal); margin-bottom: var(--h2-mb, 0); border-bottom: var(--h2-bw, 0) solid var(--h2-bc, var(--border)); }
             h3 { font-size: var(--h3-fs, var(--fs-lg)); font-weight: var(--h3-fw, var(--fw-medium)); line-height: var(--h3-lh, var(--lh-tight)); letter-spacing: var(--h3-ls, normal); margin-bottom: var(--h3-mb, 0); border-bottom: var(--h3-bw, 0) solid var(--h3-bc, var(--border)); }
             h4 { font-size: var(--h4-fs, var(--fs-base)); font-weight: var(--h4-fw, var(--fw-medium)); line-height: var(--h4-lh, var(--lh-tight)); letter-spacing: var(--h4-ls, normal); margin-bottom: var(--h4-mb, 0); border-bottom: var(--h4-bw, 0) solid var(--h4-bc, var(--border)); }
+            h5 { font-size: var(--h5-fs, var(--fs-sm)); font-weight: var(--h5-fw, var(--fw-medium)); line-height: var(--h5-lh, var(--lh-tight)); letter-spacing: var(--h5-ls, normal); margin-bottom: var(--h5-mb, 0); border-bottom: var(--h5-bw, 0) solid var(--h5-bc, var(--border)); }
+            h6 { font-size: var(--h6-fs, var(--fs-xs)); font-weight: var(--h6-fw, var(--fw-medium)); line-height: var(--h6-lh, var(--lh-tight)); letter-spacing: var(--h6-ls, normal); margin-bottom: var(--h6-mb, 0); border-bottom: var(--h6-bw, 0) solid var(--h6-bc, var(--border)); }
             a { color: var(--accent); text-decoration: none; }
             a:hover { text-decoration: underline; }
             p { max-width: 68ch; font-size: var(--p-fs, var(--fs-base)); font-weight: var(--p-fw, var(--fw)); line-height: var(--p-lh, var(--lh)); letter-spacing: var(--p-ls, normal); margin-bottom: var(--p-mb, 0); border-bottom: var(--p-bw, 0) solid var(--p-bc, var(--border)); }
@@ -87,7 +89,7 @@
 
         @layer components {
             /* ---------- botões ---------- */
-            .btn { font-family: var(--font-btn); font-size: 1rem; letter-spacing: var(--btn-tracking); height: var(--btn-height); font-weight: var(--btn-weight); display: inline-flex; align-items: center; justify-content: center; text-transform: var(--btn-transform); border-radius: var(--btn-radius); transition: opacity .3s; }
+            .btn { font-family: var(--font-btn); font-size: 1rem; letter-spacing: var(--btn-tracking); min-height: var(--btn-height); padding-block: var(--btn-pad-y); font-weight: var(--btn-weight); display: inline-flex; align-items: center; justify-content: center; text-transform: var(--btn-transform); border-radius: var(--btn-radius); transition: opacity .3s; }
             .btn > svg { width: 2em; height: 2em; fill: currentColor; }
             .btn > span { padding: 0 var(--btn-pad-x); }
             .btn > svg + span { padding-left: 0; }
@@ -97,7 +99,7 @@
             .btn--primary      { background: var(--accent); color: var(--text-onaccent); }
             .btn--danger       { background: transparent; box-shadow: inset 0 0 0 1px var(--danger); color: var(--danger); }
             .btn--danger-solid { background: var(--danger); color: #fff; }
-            .btn--link         { height: auto; color: var(--accent); text-decoration: underline; }
+            .btn--link         { min-height: 0; padding-block: 0; color: var(--accent); text-decoration: underline; }
             .btn--sm { font-size: .85rem; }
             .btn--sign          { background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--text-muted); }
             .btn--sign.is-ready { box-shadow: inset 0 0 0 1px var(--ok); color: var(--ok); }
@@ -288,6 +290,25 @@
             .prose li + li { margin-top: var(--space-1); }
 
             .faint { color: var(--text-muted); }
+
+            /* ---------- modal (overlay) ---------- */
+            .modal { position: fixed; inset: 0; z-index: 100; display: none; align-items: center; justify-content: center; padding: var(--space-4); }
+            .modal.is-open { display: flex; }
+            .modal__backdrop { position: absolute; inset: 0; background: rgba(0, 0, 0, .5); }
+            .modal > .dialog { position: relative; z-index: 1; max-width: 100%; }
+        }
+
+        @layer utilities {
+            /* grid responsivo: auto-fit por largura mínima (sem media query) */
+            .grid { display: grid; gap: var(--grid-gap, var(--space-4)); grid-template-columns: repeat(auto-fill, minmax(var(--grid-min, 220px), 1fr)); }
+            .grid--fit { grid-template-columns: repeat(auto-fit, minmax(var(--grid-min, 220px), 1fr)); }
+            /* grid de N colunas fixas, colapsa em telas estreitas */
+            .grid-2, .grid-3, .grid-4 { display: grid; gap: var(--grid-gap, var(--space-4)); }
+            .grid-2 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(3, 1fr); }
+            .grid-4 { grid-template-columns: repeat(4, 1fr); }
+            @media (max-width: 720px) { .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); } }
+            @media (max-width: 480px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
         }
     </style>
 
@@ -335,6 +356,7 @@
         .sizes { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); }
         .stack { display: flex; flex-direction: column; gap: var(--space-3); }
         .demo-surface { padding: var(--space-5); background: var(--surface-2); border-radius: var(--radius-lg); }
+        .demo-cell { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: var(--space-4); text-align: center; color: var(--text-muted); font-family: var(--font-mono); font-size: var(--fs-sm); }
 
         footer { margin-top: var(--space-7); padding-top: var(--space-4); border-top: 1px solid var(--border); text-align: center; }
         footer a { color: var(--text-muted); font-size: var(--fs-sm); }
@@ -428,6 +450,7 @@
             <div class="sg-ctrl"><label>Cantos</label><input type="range" data-var="--btn-radius" data-unit="px" min="0" max="24" step="1" value="4"><output>4px</output></div>
             <div class="sg-ctrl"><label>Altura</label><input type="range" data-var="--btn-height" data-unit="em" min="1.6" max="3" step="0.1" value="2"><output>2em</output></div>
             <div class="sg-ctrl"><label>Padding X</label><input type="range" data-var="--btn-pad-x" data-unit="em" min="0.25" max="2" step="0.05" value="0.75"><output>0.75em</output></div>
+            <div class="sg-ctrl"><label>Padding Y</label><input type="range" data-var="--btn-pad-y" data-unit="em" min="0" max="1" step="0.05" value="0"><output>0em</output></div>
             <div class="sg-ctrl"><label>Entre letras</label><input type="range" data-var="--btn-tracking" data-unit="em" min="0" max="0.2" step="0.005" value="0.075"><output>0.075em</output></div>
             <div class="sg-ctrl"><label>Peso</label><input type="range" data-var="--btn-weight" min="300" max="800" step="100" value="400"><output>400</output></div>
             <div class="sg-ctrl"><label for="btnTransform">Caixa alta</label>
@@ -438,11 +461,18 @@
             </div>
         </div>
 
+        <div class="sg-group">
+            <h3>Ícones (Material)</h3>
+            <input type="file" id="iconFile" accept=".svg,image/svg+xml" style="width:100%">
+            <p class="sg-note">Suba um SVG no padrão <b>Material Icons</b> (viewBox <code>0 0 24 24</code>, sem área de proteção). Ele substitui <b>todos os ícones</b> do guia. Como o Material não tem a folga dos ícones atuais, eles ficam maiores/mais colados — comportamento esperado. <b>Restaurar</b> volta os originais.</p>
+        </div>
+
         <div class="sg-actions">
-            <button type="button" class="btn btn--primary btn--sm" id="sgExport"><span>Exportar CSS</span></button>
+            <button type="button" class="btn btn--primary btn--sm" id="sgExport"><span>Exportar HTML</span></button>
+            <button type="button" class="btn btn--ghost btn--sm" id="sgRandom" title="Paleta aleatória"><span>🎲 Aleatória</span></button>
             <button type="button" class="btn btn--ghost btn--sm" id="sgReset"><span>Restaurar</span></button>
         </div>
-        <textarea class="sg-out" id="sgOut" readonly placeholder="O CSS gerado aparece aqui (e é copiado para a área de transferência)."></textarea>
+        <textarea class="sg-out" id="sgOut" readonly placeholder="O HTML completo (CSS + JS inline) aparece aqui, é copiado e baixado como index.html."></textarea>
     </aside>
 
     <h1>Style guide</h1>
@@ -465,6 +495,7 @@
             <li><a href="#alerts">Alerts &amp; callouts</a></li>
             <li><a href="#context">Context-box</a></li>
             <li><a href="#cards">Cards</a></li>
+            <li><a href="#grid">Grid</a></li>
             <li><a href="#tabelas">Tabelas</a></li>
             <li><a href="#accordion">Accordion</a></li>
             <li><a href="#lista">Lista com ações</a></li>
@@ -818,6 +849,27 @@
         <li class="card card--new"><button type="button" class="card__new"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M23.87,26.13h-6.75v-2.25h6.75v-6.75h2.25v6.75h6.75v2.25h-6.75v6.75h-2.25v-6.75Z"/></svg><span>Novo item</span></button></li>
     </ul>
 
+    <!-- ================= GRID ================= -->
+    <h2 id="grid">Grid <a class="anchor" href="#grid">#</a></h2>
+    <p class="faint" style="font-size:var(--fs-sm)">Utilitários responsivos no <code>@layer utilities</code>. <code>.grid</code> preenche por largura mínima (<code>--grid-min</code>), sem media query. <code>.grid-2/3/4</code> = colunas fixas que colapsam em telas estreitas.</p>
+
+    <h3><code>.grid</code> — auto, responsivo (<code>--grid-min:160px</code>)</h3>
+    <div class="grid" style="--grid-min:160px">
+        <div class="demo-cell">1</div>
+        <div class="demo-cell">2</div>
+        <div class="demo-cell">3</div>
+        <div class="demo-cell">4</div>
+        <div class="demo-cell">5</div>
+        <div class="demo-cell">6</div>
+    </div>
+
+    <h3 style="margin-top:var(--space-5)"><code>.grid-3</code> — 3 colunas, colapsa em telas estreitas</h3>
+    <div class="grid-3">
+        <div class="demo-cell">A</div>
+        <div class="demo-cell">B</div>
+        <div class="demo-cell">C</div>
+    </div>
+
     <!-- ================= TABELAS ================= -->
     <h2 id="tabelas">Tabelas <a class="anchor" href="#tabelas">#</a></h2>
     <table class="table">
@@ -951,6 +1003,25 @@
         </div>
     </div>
 
+    <div class="sizes" style="margin-top:var(--space-3)">
+        <button type="button" class="btn btn--primary" data-modal="demoModal"><span>Abrir modal</span></button>
+        <span class="faint" style="font-size:var(--fs-sm)">Overlay real (<code>.modal</code>): fecha no ✕, no backdrop ou com <kbd>Esc</kbd>.</span>
+    </div>
+    <div class="modal" id="demoModal">
+        <div class="modal__backdrop" data-modal-close></div>
+        <div class="dialog">
+            <div class="dialog__head">
+                <span class="dialog__title">Confirmar ação</span>
+                <button type="button" class="btn btn--sm" data-modal-close title="Fechar"><svg class="ic" viewBox="0 0 50 50" width="24" height="24" aria-hidden="true" focusable="false"><path d="M18.7,32.88l-1.58-1.58,6.3-6.3-6.3-6.3,1.58-1.58,6.3,6.3,6.3-6.3,1.58,1.58-6.3,6.3,6.3,6.3-1.58,1.58-6.3-6.3-6.3,6.3Z"/></svg></button>
+            </div>
+            <div class="dialog__body">Esta ação não pode ser desfeita. Deseja continuar?</div>
+            <div class="dialog__foot">
+                <button type="button" class="btn btn--ghost" data-modal-close><span>Cancelar</span></button>
+                <button type="button" class="btn btn--danger-solid" data-modal-close><span>Excluir</span></button>
+            </div>
+        </div>
+    </div>
+
     <!-- ================= TOAST ================= -->
     <h2 id="toast">Toast <a class="anchor" href="#toast">#</a></h2>
     <div class="stack" style="max-width:360px">
@@ -987,6 +1058,8 @@
                 { key: 'h2',   label: 'H2',              fs: 24, fsMin: 16, fsMax: 56, fw: 600, lh: 1.2 },
                 { key: 'h3',   label: 'H3',              fs: 18, fsMin: 13, fsMax: 40, fw: 600, lh: 1.2 },
                 { key: 'h4',   label: 'H4',              fs: 15, fsMin: 12, fsMax: 32, fw: 600, lh: 1.2 },
+                { key: 'h5',   label: 'H5',              fs: 13, fsMin: 11, fsMax: 28, fw: 600, lh: 1.2 },
+                { key: 'h6',   label: 'H6',              fs: 12, fsMin: 10, fsMax: 24, fw: 600, lh: 1.2 },
                 { key: 'p',    label: 'Parágrafo',       fs: 15, fsMin: 12, fsMax: 24, fw: 400, lh: 1.5 },
                 { key: 'sm',   label: 'Auxiliar (small)', fs: 13, fsMin: 10, fsMax: 20, fw: 400, lh: 1.5 },
                 { key: 'list', label: 'Listas (ul/ol)',  fs: 15, fsMin: 12, fsMax: 24, fw: 400, lh: 1.5 }
@@ -1095,6 +1168,87 @@
             nameEl.value = '';
         });
 
+        /* ---- comportamento dos componentes (modal/accordion/tabs/toast) ---- */
+        function componentBehaviors() {
+            document.addEventListener('click', function (e) {
+                var t = e.target;
+                var acc = t.closest('.section__heading button');
+                if (acc) { var sec = acc.closest('.section'); if (sec) { sec.classList.toggle('is-collapsed'); var ic = acc.querySelector('.ic'); if (ic) ic.classList.toggle('rot-right'); } return; }
+                var tab = t.closest('.tabs .tab');
+                if (tab) { var all = tab.parentNode.querySelectorAll('.tab'); for (var i = 0; i < all.length; i++) all[i].classList.remove('is-active'); tab.classList.add('is-active'); return; }
+                var open = t.closest('[data-modal]');
+                if (open) { var m = document.getElementById(open.getAttribute('data-modal')); if (m) m.classList.add('is-open'); return; }
+                if (t.closest('[data-modal-close]')) { var mm = t.closest('.modal'); if (mm) mm.classList.remove('is-open'); return; }
+                var x = t.closest('.chip__x');
+                if (x) { var host = x.closest('.toast') || x.closest('.chip'); if (host) host.parentNode.removeChild(host); return; }
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') { var o = document.querySelectorAll('.modal.is-open'); for (var i = 0; i < o.length; i++) o[i].classList.remove('is-open'); }
+            });
+        }
+        componentBehaviors();
+        var COMPONENT_JS = '(' + componentBehaviors.toString() + ')();';
+
+        /* ---- upload de ícone (padrão Material Icons) ---- */
+        var iconSnaps = Array.prototype.map.call(document.querySelectorAll('svg.ic'), function (s) {
+            return { el: s, vb: s.getAttribute('viewBox'), inner: s.innerHTML };
+        });
+        function restoreIcons() {
+            iconSnaps.forEach(function (s) { if (s.vb) s.el.setAttribute('viewBox', s.vb); s.el.innerHTML = s.inner; });
+        }
+        function applyIcon(text) {
+            var tmp = document.createElement('div');
+            tmp.innerHTML = String(text).replace(/<script[\s\S]*?<\/script>/gi, '');
+            var svg = tmp.querySelector('svg');
+            if (!svg) return;
+            var vb = svg.getAttribute('viewBox') || '0 0 24 24', inner = svg.innerHTML;
+            iconSnaps.forEach(function (s) { s.el.setAttribute('viewBox', vb); s.el.innerHTML = inner; });
+        }
+        document.getElementById('iconFile').addEventListener('change', function () {
+            var f = this.files && this.files[0];
+            if (!f) return;
+            var reader = new FileReader();
+            reader.onload = function () { applyIcon(reader.result); };
+            reader.readAsText(f);
+        });
+
+        /* ---- paleta aleatória (HSL com regras + contraste) ---- */
+        function hslHex(h, s, l) {
+            s /= 100; l /= 100;
+            var a = s * Math.min(l, 1 - l);
+            function f(n) {
+                var k = (n + h / 30) % 12;
+                var c = l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1));
+                return ('0' + Math.round(255 * c).toString(16)).slice(-2);
+            }
+            return '#' + f(0) + f(8) + f(4);
+        }
+        function onAccent(hex) {
+            var r = parseInt(hex.substr(1, 2), 16) / 255, g = parseInt(hex.substr(3, 2), 16) / 255, b = parseInt(hex.substr(5, 2), 16) / 255;
+            return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.55 ? '#111111' : '#ffffff';
+        }
+        function buildPalette(h, dark) {
+            var acc = dark ? hslHex(h, 70, 66) : hslHex(h, 62, 52);
+            if (dark) return {
+                '--bg': hslHex(h, 16, 10), '--surface': hslHex(h, 15, 13), '--surface-2': hslHex(h, 14, 17),
+                '--text': hslHex(h, 15, 92), '--text-muted': hslHex(h, 10, 64),
+                '--border': hslHex(h, 12, 22), '--border-strong': hslHex(h, 12, 32), '--text-onaccent': onAccent(acc),
+                '--accent': acc, '--info': hslHex(210, 75, 62), '--ok': hslHex(140, 55, 58), '--wip': hslHex(38, 90, 62), '--danger': hslHex(2, 85, 68), '--todo': hslHex(h, 8, 34)
+            };
+            return {
+                '--bg': hslHex(h, 22, 97), '--surface': hslHex(h, 30, 99), '--surface-2': hslHex(h, 20, 94),
+                '--text': hslHex(h, 16, 12), '--text-muted': hslHex(h, 10, 42),
+                '--border': hslHex(h, 16, 88), '--border-strong': hslHex(h, 15, 78), '--text-onaccent': onAccent(acc),
+                '--accent': acc, '--info': hslHex(210, 70, 45), '--ok': hslHex(140, 60, 36), '--wip': hslHex(38, 92, 46), '--danger': hslHex(2, 68, 48), '--todo': hslHex(h, 8, 68)
+            };
+        }
+        document.getElementById('sgRandom').addEventListener('click', function () {
+            var h = Math.floor(Math.random() * 360);
+            var pl = buildPalette(h, false), pd = buildPalette(h, true);
+            for (var k in pl) { palettes.light[k] = pl[k]; palettes.dark[k] = pd[k]; }
+            applyTheme(currentTheme);
+        });
+
         function get(v) {
             return controls.filter(function (el) { return el.dataset.var === v; })[0].value;
         }
@@ -1164,7 +1318,7 @@
 '    --fs-base: ' + f + 'px; --fs-lg: ' + round(f * 1.2) + 'px; --fs-xl: ' + round(f * 1.6) + 'px; --fs-2xl: ' + round(f * 2.133) + 'px;\n' +
 '    --lh: ' + get('--lh') + ';\n' +
 '    /* botões */\n' +
-'    --btn-radius: ' + get('--btn-radius') + 'px; --btn-height: ' + get('--btn-height') + 'em; --btn-pad-x: ' + get('--btn-pad-x') + 'em;\n' +
+'    --btn-radius: ' + get('--btn-radius') + 'px; --btn-height: ' + get('--btn-height') + 'em; --btn-pad-x: ' + get('--btn-pad-x') + 'em; --btn-pad-y: ' + get('--btn-pad-y') + 'em;\n' +
 '    --btn-transform: ' + get('--btn-transform') + '; --btn-tracking: ' + get('--btn-tracking') + 'em; --btn-weight: ' + get('--btn-weight') + ';\n' +
 '    --font-btn: ' + roles[3].stack + ';\n' +
 '}';
@@ -1174,7 +1328,7 @@
                 css = css.replace(/\n}$/, eb + '}');
             }
             var typeChanged = controls.filter(function (el) {
-                return /^--(h1|h2|h3|h4|p|sm|list)-/.test(el.dataset.var) && el.value !== defaults[el.dataset.var];
+                return /^--(h1|h2|h3|h4|h5|h6|p|sm|list)-/.test(el.dataset.var) && el.value !== defaults[el.dataset.var];
             });
             if (typeChanged.length) {
                 var tb = '\n    /* tipografia por elemento */\n';
@@ -1189,10 +1343,39 @@
                 }
             });
             var systemCss = document.querySelector('style').textContent.trim();
-            css = css + '\n\n' + systemCss;
-            if (imports) css = imports + '\n' + css;
-            document.getElementById('sgOut').value = css;
-            if (navigator.clipboard) navigator.clipboard.writeText(css).catch(function () {});
+            var styleContent = (imports ? imports + '\n' : '') + css + '\n\n' + systemCss;
+
+            var cell = 'style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:var(--space-4);text-align:center;color:var(--text-muted)"';
+            var sample = [
+                '<main style="max-width:960px;margin:0 auto;padding:24px;display:flex;flex-direction:column;gap:20px">',
+                '<h1>Design system</h1>',
+                '<p>Starter gerado pelo styleguide — CSS e JS inline, sem dependências.</p>',
+                '<div><button class="btn btn--primary"><span>Primário</span></button> <button class="btn btn--ghost"><span>Ghost</span></button> <button class="btn btn--danger-solid"><span>Perigo</span></button></div>',
+                '<h2>Grid responsivo</h2>',
+                '<div class="grid" style="--grid-min:160px"><div ' + cell + '>1</div><div ' + cell + '>2</div><div ' + cell + '>3</div><div ' + cell + '>4</div></div>',
+                '<h2>Tabs</h2>',
+                '<div class="tabs"><button class="tab is-active">Um</button><button class="tab">Dois</button><button class="tab">Três</button></div>',
+                '<h2>Accordion</h2>',
+                '<section class="section"><h3 class="section__heading"><button type="button" class="btn"><span>Seção (clique)</span></button></h3><div class="section__body"><p>Conteúdo da seção.</p></div></section>',
+                '<h2>Modal</h2>',
+                '<div><button class="btn btn--primary" data-modal="m1"><span>Abrir modal</span></button></div>',
+                '<div class="modal" id="m1"><div class="modal__backdrop" data-modal-close></div><div class="dialog"><div class="dialog__head"><span class="dialog__title">Confirmar</span><button class="btn btn--sm" data-modal-close title="Fechar"><span>×</span></button></div><div class="dialog__body">Corpo do modal. Fecha no backdrop, no × ou com Esc.</div><div class="dialog__foot"><button class="btn btn--ghost" data-modal-close><span>Cancelar</span></button><button class="btn btn--danger-solid" data-modal-close><span>Excluir</span></button></div></div></div>',
+                '<h2>Toast</h2>',
+                '<div class="toast toast--ok"><div class="toast__body">Salvo com sucesso.</div><button class="chip__x" type="button" title="Fechar"><span>×</span></button></div>',
+                '</main>'
+            ].join('\n');
+
+            var doc = '<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Design system</title>\n<style>\n' +
+                styleContent + '\n</style>\n</head>\n<body>\n' + sample + '\n<script>\n' + COMPONENT_JS + '\n<\/script>\n</body>\n</html>\n';
+
+            document.getElementById('sgOut').value = doc;
+            if (navigator.clipboard) navigator.clipboard.writeText(doc).catch(function () {});
+            var blob = new Blob([doc], { type: 'text/html' });
+            var a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'index.html';
+            document.body.appendChild(a); a.click();
+            setTimeout(function () { URL.revokeObjectURL(a.href); a.parentNode.removeChild(a); }, 0);
         });
 
         document.getElementById('sgReset').addEventListener('click', function () {
@@ -1216,6 +1399,8 @@
             themeToggle.checked = false;
             ['--surface-2', '--border-strong', '--text-onaccent', '--todo'].forEach(function (v) { root.style.removeProperty(v); });
             root.removeAttribute('data-theme');
+            restoreIcons();
+            document.getElementById('iconFile').value = '';
             document.getElementById('sgOut').value = '';
         });
     })();
