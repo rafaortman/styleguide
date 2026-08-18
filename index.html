@@ -35,7 +35,7 @@
                 --font-mono: "Noto Sans Mono", ui-monospace, monospace;
                 --lh-tight: 1.2; --fw: 400; --fw-medium: 600; --fw-bold: 700;
                 --ring: 2px; --control-h: 2em;
-                --btn-radius: 4px; --btn-height: 2em; --btn-pad-t: 0em; --btn-pad-r: .75em; --btn-pad-b: 0em; --btn-pad-l: .75em; --btn-gap: .4em; --btn-transform: uppercase; --btn-tracking: .075em; --btn-weight: 400;
+                --btn-radius: 4px; --btn-height: 2em; --btn-pad-x: .75em; --btn-pad-y: 0em; --btn-pad-icon: .5em; --btn-gap: .4em; --btn-transform: uppercase; --btn-tracking: .075em; --btn-weight: 400;
                 --shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.08);
                 --shadow-2: 0 8px 24px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
 
@@ -90,8 +90,10 @@
 
         @layer components {
             /* ---------- botões ---------- */
-            .btn { font-family: var(--font-btn); font-size: 1rem; letter-spacing: var(--btn-tracking); min-height: var(--btn-height); padding: var(--btn-pad-t) var(--btn-pad-r) var(--btn-pad-b) var(--btn-pad-l); gap: var(--btn-gap); font-weight: var(--btn-weight); display: inline-flex; align-items: center; justify-content: center; text-transform: var(--btn-transform); border-radius: var(--btn-radius); transition: opacity .3s; }
+            .btn { font-family: var(--font-btn); font-size: 1rem; letter-spacing: var(--btn-tracking); min-height: var(--btn-height); padding: var(--btn-pad-y) var(--btn-pad-x); gap: var(--btn-gap); font-weight: var(--btn-weight); display: inline-flex; align-items: center; justify-content: center; text-transform: var(--btn-transform); border-radius: var(--btn-radius); transition: opacity .3s; }
             .btn > svg { width: 1.5em; height: 1.5em; fill: currentColor; }
+            .btn:has(> span):has(> svg:first-child) { padding-left: var(--btn-pad-icon); }
+            .btn:has(> span):has(> svg:last-child)  { padding-right: var(--btn-pad-icon); }
             .btn:not(:has(> span)) { padding-inline: 0; aspect-ratio: 1; }
             .btn:not(:disabled):hover { opacity: .8; }
             .btn--ghost        { background: var(--surface); box-shadow: inset 0 0 0 1px currentColor; color: var(--text-muted); }
@@ -451,10 +453,9 @@
             <div class="sg-ctrl"><label for="fontBtn">Fonte</label><input type="text" id="fontBtn" value="Noto Sans" autocomplete="off" spellcheck="false"></div>
             <div class="sg-ctrl"><label>Cantos</label><input type="range" data-var="--btn-radius" data-unit="px" min="0" max="24" step="1" value="4"><output>4px</output></div>
             <div class="sg-ctrl"><label>Altura</label><input type="range" data-var="--btn-height" data-unit="em" min="1.6" max="3" step="0.1" value="2"><output>2em</output></div>
-            <div class="sg-ctrl"><label>Padding ↑</label><input type="range" data-var="--btn-pad-t" data-unit="em" min="0" max="2" step="0.05" value="0"><output>0em</output></div>
-            <div class="sg-ctrl"><label>Padding →</label><input type="range" data-var="--btn-pad-r" data-unit="em" min="0" max="2" step="0.05" value="0.75"><output>0.75em</output></div>
-            <div class="sg-ctrl"><label>Padding ↓</label><input type="range" data-var="--btn-pad-b" data-unit="em" min="0" max="2" step="0.05" value="0"><output>0em</output></div>
-            <div class="sg-ctrl"><label>Padding ←</label><input type="range" data-var="--btn-pad-l" data-unit="em" min="0" max="2" step="0.05" value="0.75"><output>0.75em</output></div>
+            <div class="sg-ctrl"><label>Padding X (texto)</label><input type="range" data-var="--btn-pad-x" data-unit="em" min="0" max="2" step="0.05" value="0.75"><output>0.75em</output></div>
+            <div class="sg-ctrl"><label>Padding Y</label><input type="range" data-var="--btn-pad-y" data-unit="em" min="0" max="1" step="0.05" value="0"><output>0em</output></div>
+            <div class="sg-ctrl"><label>Padding ícone</label><input type="range" data-var="--btn-pad-icon" data-unit="em" min="0" max="2" step="0.05" value="0.5"><output>0.5em</output></div>
             <div class="sg-ctrl"><label>Espaço ícone</label><input type="range" data-var="--btn-gap" data-unit="em" min="0" max="1" step="0.05" value="0.4"><output>0.4em</output></div>
             <div class="sg-ctrl"><label>Entre letras</label><input type="range" data-var="--btn-tracking" data-unit="em" min="0" max="0.2" step="0.005" value="0.075"><output>0.075em</output></div>
             <div class="sg-ctrl"><label>Peso</label><input type="range" data-var="--btn-weight" min="300" max="800" step="100" value="400"><output>400</output></div>
@@ -1335,7 +1336,7 @@
 '    --lh: ' + get('--lh') + ';\n' +
 '    /* botões */\n' +
 '    --btn-radius: ' + get('--btn-radius') + 'px; --btn-height: ' + get('--btn-height') + 'em; --btn-gap: ' + get('--btn-gap') + 'em;\n' +
-'    --btn-pad-t: ' + get('--btn-pad-t') + 'em; --btn-pad-r: ' + get('--btn-pad-r') + 'em; --btn-pad-b: ' + get('--btn-pad-b') + 'em; --btn-pad-l: ' + get('--btn-pad-l') + 'em;\n' +
+'    --btn-pad-x: ' + get('--btn-pad-x') + 'em; --btn-pad-y: ' + get('--btn-pad-y') + 'em; --btn-pad-icon: ' + get('--btn-pad-icon') + 'em;\n' +
 '    --btn-transform: ' + get('--btn-transform') + '; --btn-tracking: ' + get('--btn-tracking') + 'em; --btn-weight: ' + get('--btn-weight') + ';\n' +
 '    --font-btn: ' + roles[3].stack + ';\n' +
 '}';
