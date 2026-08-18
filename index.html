@@ -1225,24 +1225,31 @@
             var r = parseInt(hex.substr(1, 2), 16) / 255, g = parseInt(hex.substr(3, 2), 16) / 255, b = parseInt(hex.substr(5, 2), 16) / 255;
             return (0.2126 * r + 0.7152 * g + 0.0722 * b) > 0.55 ? '#111111' : '#ffffff';
         }
-        function buildPalette(h, dark) {
-            var acc = dark ? hslHex(h, 70, 66) : hslHex(h, 62, 52);
+        function buildPalette(s, dark) {
+            // ah = matiz do accent; nh = matiz (independente) dos neutros; as = saturação do accent
+            var acc = dark ? hslHex(s.ah, s.as, 66) : hslHex(s.ah, s.as, 52);
             if (dark) return {
-                '--bg': hslHex(h, 16, 10), '--surface': hslHex(h, 15, 13), '--surface-2': hslHex(h, 14, 17),
-                '--text': hslHex(h, 15, 92), '--text-muted': hslHex(h, 10, 64),
-                '--border': hslHex(h, 12, 22), '--border-strong': hslHex(h, 12, 32), '--text-onaccent': onAccent(acc),
-                '--accent': acc, '--info': hslHex(210, 75, 62), '--ok': hslHex(140, 55, 58), '--wip': hslHex(38, 90, 62), '--danger': hslHex(2, 85, 68), '--todo': hslHex(h, 8, 34)
+                '--bg': hslHex(s.nh, 12, 10), '--surface': hslHex(s.nh, 11, 13), '--surface-2': hslHex(s.nh, 10, 17),
+                '--text': hslHex(s.nh, 10, 92), '--text-muted': hslHex(s.nh, 8, 64),
+                '--border': hslHex(s.nh, 10, 22), '--border-strong': hslHex(s.nh, 10, 32), '--text-onaccent': onAccent(acc),
+                '--accent': acc, '--info': hslHex(s.ih, 75, 62), '--ok': hslHex(s.oh, 55, 58), '--wip': hslHex(s.wh, 90, 62), '--danger': hslHex(s.dh, 85, 68), '--todo': hslHex(s.nh, 6, 34)
             };
             return {
-                '--bg': hslHex(h, 22, 97), '--surface': hslHex(h, 30, 99), '--surface-2': hslHex(h, 20, 94),
-                '--text': hslHex(h, 16, 12), '--text-muted': hslHex(h, 10, 42),
-                '--border': hslHex(h, 16, 88), '--border-strong': hslHex(h, 15, 78), '--text-onaccent': onAccent(acc),
-                '--accent': acc, '--info': hslHex(210, 70, 45), '--ok': hslHex(140, 60, 36), '--wip': hslHex(38, 92, 46), '--danger': hslHex(2, 68, 48), '--todo': hslHex(h, 8, 68)
+                '--bg': hslHex(s.nh, 14, 97), '--surface': hslHex(s.nh, 16, 99), '--surface-2': hslHex(s.nh, 13, 94),
+                '--text': hslHex(s.nh, 14, 12), '--text-muted': hslHex(s.nh, 9, 42),
+                '--border': hslHex(s.nh, 13, 88), '--border-strong': hslHex(s.nh, 12, 78), '--text-onaccent': onAccent(acc),
+                '--accent': acc, '--info': hslHex(s.ih, 70, 45), '--ok': hslHex(s.oh, 60, 36), '--wip': hslHex(s.wh, 92, 46), '--danger': hslHex(s.dh, 68, 48), '--todo': hslHex(s.nh, 7, 68)
             };
         }
         document.getElementById('sgRandom').addEventListener('click', function () {
-            var h = Math.floor(Math.random() * 360);
-            var pl = buildPalette(h, false), pd = buildPalette(h, true);
+            function jit(base, amt) { return base + (Math.random() * 2 - 1) * amt; }
+            var seed = {
+                ah: Math.random() * 360,          // accent: matiz livre
+                nh: Math.random() * 360,          // neutros: matiz independente do accent
+                as: 58 + Math.random() * 24,      // saturação do accent (58–82)
+                ih: jit(212, 14), oh: jit(142, 12), wh: jit(38, 8), dh: jit(2, 10)  // status com leve variação
+            };
+            var pl = buildPalette(seed, false), pd = buildPalette(seed, true);
             for (var k in pl) { palettes.light[k] = pl[k]; palettes.dark[k] = pd[k]; }
             applyTheme(currentTheme);
         });
