@@ -35,7 +35,7 @@
                 --font-mono: "Noto Sans Mono", ui-monospace, monospace;
                 --lh-tight: 1.2; --fw: 400; --fw-medium: 600; --fw-bold: 700;
                 --ring: 2px; --control-h: 2em;
-                --btn-radius: 4px; --btn-height: 2em; --btn-pad-x: .75em; --btn-pad-y: 0em; --btn-transform: uppercase; --btn-tracking: .075em; --btn-weight: 400;
+                --btn-radius: 4px; --btn-height: 2em; --btn-pad-x: .75em; --btn-pad-y: 0em; --btn-gap: .4em; --btn-transform: uppercase; --btn-tracking: .075em; --btn-weight: 400;
                 --shadow-1: 0 1px 2px rgba(0,0,0,.06), 0 1px 3px rgba(0,0,0,.08);
                 --shadow-2: 0 8px 24px rgba(0,0,0,.12), 0 2px 6px rgba(0,0,0,.08);
 
@@ -90,17 +90,15 @@
 
         @layer components {
             /* ---------- botões ---------- */
-            .btn { font-family: var(--font-btn); font-size: 1rem; letter-spacing: var(--btn-tracking); min-height: var(--btn-height); padding-block: var(--btn-pad-y); font-weight: var(--btn-weight); display: inline-flex; align-items: center; justify-content: center; text-transform: var(--btn-transform); border-radius: var(--btn-radius); transition: opacity .3s; }
-            .btn > svg { width: 2em; height: 2em; fill: currentColor; }
-            .btn > span { padding: 0 var(--btn-pad-x); }
-            .btn > svg + span { padding-left: 0; }
-            .btn > span:has(+ svg) { padding-right: 0; }
+            .btn { font-family: var(--font-btn); font-size: 1rem; letter-spacing: var(--btn-tracking); min-height: var(--btn-height); padding: var(--btn-pad-y) var(--btn-pad-x); gap: var(--btn-gap); font-weight: var(--btn-weight); display: inline-flex; align-items: center; justify-content: center; text-transform: var(--btn-transform); border-radius: var(--btn-radius); transition: opacity .3s; }
+            .btn > svg { width: 1.5em; height: 1.5em; fill: currentColor; }
+            .btn:not(:has(> span)) { padding-inline: 0; aspect-ratio: 1; }
             .btn:not(:disabled):hover { opacity: .8; }
             .btn--ghost        { background: var(--surface); box-shadow: inset 0 0 0 1px currentColor; color: var(--text-muted); }
             .btn--primary      { background: var(--accent); color: var(--text-onaccent); }
             .btn--danger       { background: transparent; box-shadow: inset 0 0 0 1px var(--danger); color: var(--danger); }
             .btn--danger-solid { background: var(--danger); color: #fff; }
-            .btn--link         { min-height: 0; padding-block: 0; color: var(--accent); text-decoration: underline; }
+            .btn--link         { min-height: 0; padding: 0; color: var(--accent); text-decoration: underline; }
             .btn--sm { font-size: .85rem; }
             .btn--sign          { background: var(--surface); box-shadow: inset 0 0 0 1px var(--border); color: var(--text-muted); }
             .btn--sign.is-ready { box-shadow: inset 0 0 0 1px var(--ok); color: var(--ok); }
@@ -455,6 +453,7 @@
             <div class="sg-ctrl"><label>Altura</label><input type="range" data-var="--btn-height" data-unit="em" min="1.6" max="3" step="0.1" value="2"><output>2em</output></div>
             <div class="sg-ctrl"><label>Padding X</label><input type="range" data-var="--btn-pad-x" data-unit="em" min="0.25" max="2" step="0.05" value="0.75"><output>0.75em</output></div>
             <div class="sg-ctrl"><label>Padding Y</label><input type="range" data-var="--btn-pad-y" data-unit="em" min="0" max="1" step="0.05" value="0"><output>0em</output></div>
+            <div class="sg-ctrl"><label>Espaço ícone</label><input type="range" data-var="--btn-gap" data-unit="em" min="0" max="1" step="0.05" value="0.4"><output>0.4em</output></div>
             <div class="sg-ctrl"><label>Entre letras</label><input type="range" data-var="--btn-tracking" data-unit="em" min="0" max="0.2" step="0.005" value="0.075"><output>0.075em</output></div>
             <div class="sg-ctrl"><label>Peso</label><input type="range" data-var="--btn-weight" min="300" max="800" step="100" value="400"><output>400</output></div>
             <div class="sg-ctrl"><label for="btnTransform">Caixa alta</label>
@@ -1333,7 +1332,7 @@
 '    --fs-base: ' + f + 'px; --fs-lg: ' + round(f * 1.2) + 'px; --fs-xl: ' + round(f * 1.6) + 'px; --fs-2xl: ' + round(f * 2.133) + 'px;\n' +
 '    --lh: ' + get('--lh') + ';\n' +
 '    /* botões */\n' +
-'    --btn-radius: ' + get('--btn-radius') + 'px; --btn-height: ' + get('--btn-height') + 'em; --btn-pad-x: ' + get('--btn-pad-x') + 'em; --btn-pad-y: ' + get('--btn-pad-y') + 'em;\n' +
+'    --btn-radius: ' + get('--btn-radius') + 'px; --btn-height: ' + get('--btn-height') + 'em; --btn-pad-x: ' + get('--btn-pad-x') + 'em; --btn-pad-y: ' + get('--btn-pad-y') + 'em; --btn-gap: ' + get('--btn-gap') + 'em;\n' +
 '    --btn-transform: ' + get('--btn-transform') + '; --btn-tracking: ' + get('--btn-tracking') + 'em; --btn-weight: ' + get('--btn-weight') + ';\n' +
 '    --font-btn: ' + roles[3].stack + ';\n' +
 '}';
