@@ -1363,9 +1363,15 @@
                 '</main>'
             ].join('\n');
 
-            var st = '<' + 'script>', et = '</' + 'script>';
-            var doc = '<!doctype html>\n<html lang="pt-BR">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n<title>Design system</title>\n<style>\n' +
-                styleContent + '\n</style>\n</head>\n<body>\n' + sample + '\n' + st + '\n' + COMPONENT_JS + '\n' + et + '\n</body>\n</html>\n';
+            // tags montadas por concatenação: dev-servers como o Live Server injetam o
+            // script de reload casando o fechamento do body no texto; sem tag literal aqui,
+            // não há como o injetor acertar o meio desta string.
+            function T(n) { return '<' + n + '>'; }
+            var doc = T('!doctype html') + '\n' + T('html lang="pt-BR"') + '\n' + T('head') + '\n' +
+                T('meta charset="utf-8"') + '\n' + T('meta name="viewport" content="width=device-width, initial-scale=1"') + '\n' +
+                T('title') + 'Design system' + T('/title') + '\n' + T('style') + '\n' +
+                styleContent + '\n' + T('/style') + '\n' + T('/head') + '\n' + T('body') + '\n' +
+                sample + '\n' + T('script') + '\n' + COMPONENT_JS + '\n' + T('/script') + '\n' + T('/body') + '\n' + T('/html') + '\n';
 
             document.getElementById('sgOut').value = doc;
             if (navigator.clipboard) navigator.clipboard.writeText(doc).catch(function () {});
