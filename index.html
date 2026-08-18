@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Style guide</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg'%20viewBox%3D'0%20-960%20960%20960'%3E%3Cpath%20fill%3D'%233b5bdb'%20d%3D'm352-522%2086-87-56-57-44%2044-56-56%2043-44-45-45-87%2087%20159%20158Zm328%20329%2087-87-45-45-44%2043-56-56%2043-44-57-56-86%2086%20158%20159Zm24-567%2057%2057-57-57ZM290-120H120v-170l175-175L80-680l200-200%20216%20216%20151-152q12-12%2027-18t31-6q16%200%2031%206t27%2018l53%2054q12%2012%2018%2027t6%2031q0%2016-6%2030.5T816-647L665-495l215%20215L680-80%20465-295%20290-120Zm-90-80h56l392-391-57-57-391%20392v56Zm420-419-29-29%2057%2057-28-28Z'%2F%3E%3C%2Fsvg%3E">
 
     <!-- ============================================================
          TOKENS: as "variáveis de topo" que governam todo o resto.
@@ -316,6 +317,8 @@
         /* ============ SÓ DO STYLE GUIDE — layout da página ============ */
         body { padding: var(--space-5); max-width: 1080px; margin-inline: auto; }
         .lead { color: var(--text-muted); font-size: var(--fs-sm); line-height: 1.6; margin: var(--space-2) 0 var(--space-6); }
+        .doc-title { display: flex; align-items: center; gap: var(--space-2); }
+        .doc-title svg { width: .9em; height: .9em; flex: none; fill: var(--accent); }
         code { font-family: var(--font-mono); background: #0000000d; padding: 0 4px; border-radius: 4px; font-size: .9em; }
         body > h2 { font-size: var(--fs-xl); margin: var(--space-7) 0 var(--space-3); padding-bottom: var(--space-2); border-bottom: 2px solid var(--border); scroll-margin-top: var(--space-4); }
         body > h3 { font-size: var(--fs-lg); margin: var(--space-5) 0 var(--space-2); color: var(--text-muted); }
@@ -475,7 +478,7 @@
         <textarea class="sg-out" id="sgOut" readonly placeholder="O HTML completo (CSS + JS inline) aparece aqui, é copiado e baixado como index.html."></textarea>
     </aside>
 
-    <h1>Style guide</h1>
+    <h1 class="doc-title"><svg viewBox="0 -960 960 960" aria-hidden="true"><path d="m352-522 86-87-56-57-44 44-56-56 43-44-45-45-87 87 159 158Zm328 329 87-87-45-45-44 43-56-56 43-44-57-56-86 86 158 159Zm24-567 57 57-57-57ZM290-120H120v-170l175-175L80-680l200-200 216 216 151-152q12-12 27-18t31-6q16 0 31 6t27 18l53 54q12 12 18 27t6 31q0 16-6 30.5T816-647L665-495l215 215L680-80 465-295 290-120Zm-90-80h56l392-391-57-57-391 392v56Zm420-419-29-29 57 57-28-28Z"/></svg>Style guide</h1>
     <p class="lead">
         Esta página ajuda <strong>designers e desenvolvedores</strong> a gerar um <strong>style guide</strong> para seus
         projetos. Abra o painel no ícone flutuante e ajuste as variáveis de topo — cores, tipografia, espaçamento e botões:
@@ -1234,22 +1237,27 @@
                 '--bg': hslHex(s.nh, 12, 10), '--surface': hslHex(s.nh, 11, 13), '--surface-2': hslHex(s.nh, 10, 17),
                 '--text': hslHex(s.nh, 10, 92), '--text-muted': hslHex(s.nh, 8, 64),
                 '--border': hslHex(s.nh, 10, 22), '--border-strong': hslHex(s.nh, 10, 32), '--text-onaccent': onAccent(acc),
-                '--accent': acc, '--info': hslHex(s.ih, 75, 62), '--ok': hslHex(s.oh, 55, 58), '--wip': hslHex(s.wh, 90, 62), '--danger': hslHex(s.dh, 85, 68), '--todo': hslHex(s.nh, 6, 34)
+                '--accent': acc, '--info': hslHex(s.info.h, s.info.s, 62), '--ok': hslHex(s.ok.h, s.ok.s, 58), '--wip': hslHex(s.wip.h, s.wip.s, 62), '--danger': hslHex(s.danger.h, s.danger.s, 68), '--todo': hslHex(s.nh, 6, 34)
             };
             return {
                 '--bg': hslHex(s.nh, 14, 97), '--surface': hslHex(s.nh, 16, 99), '--surface-2': hslHex(s.nh, 13, 94),
                 '--text': hslHex(s.nh, 14, 12), '--text-muted': hslHex(s.nh, 9, 42),
                 '--border': hslHex(s.nh, 13, 88), '--border-strong': hslHex(s.nh, 12, 78), '--text-onaccent': onAccent(acc),
-                '--accent': acc, '--info': hslHex(s.ih, 70, 45), '--ok': hslHex(s.oh, 60, 36), '--wip': hslHex(s.wh, 92, 46), '--danger': hslHex(s.dh, 68, 48), '--todo': hslHex(s.nh, 7, 68)
+                '--accent': acc, '--info': hslHex(s.info.h, s.info.s, 45), '--ok': hslHex(s.ok.h, s.ok.s, 36), '--wip': hslHex(s.wip.h, s.wip.s, 46), '--danger': hslHex(s.danger.h, s.danger.s, 48), '--todo': hslHex(s.nh, 7, 68)
             };
         }
         document.getElementById('sgRandom').addEventListener('click', function () {
             function jit(base, amt) { return base + (Math.random() * 2 - 1) * amt; }
+            function rng(min, max) { return min + Math.random() * (max - min); }
+            // status: matiz E saturação variam dentro da família (azul / verde / âmbar / vermelho)
             var seed = {
                 ah: Math.random() * 360,          // accent: matiz livre
                 nh: Math.random() * 360,          // neutros: matiz independente do accent
                 as: 58 + Math.random() * 24,      // saturação do accent (58–82)
-                ih: jit(212, 14), oh: jit(142, 12), wh: jit(38, 8), dh: jit(2, 10)  // status com leve variação
+                info:   { h: jit(212, 20), s: rng(60, 80) },
+                ok:     { h: jit(142, 22), s: rng(48, 68) },
+                wip:    { h: jit(40, 12),  s: rng(82, 96) },
+                danger: { h: jit(3, 12),   s: rng(62, 82) }
             };
             var pl = buildPalette(seed, false), pd = buildPalette(seed, true);
             for (var k in pl) { palettes.light[k] = pl[k]; palettes.dark[k] = pd[k]; }
